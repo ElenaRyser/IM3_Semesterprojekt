@@ -1,0 +1,39 @@
+# ============================================================================
+# ZUGANGSDATEN – NIE INS REPOSITORY
+# ============================================================================
+# Diese Regeln stehen bewusst zuoberst. Wer den Rest dieser Datei ersetzt,
+# soll sie sehen und stehen lassen.
+#
+# Pruefen, ob eine Datei ignoriert wird:
+#   git check-ignore -v pfad/zur/config.php
+#
+# ACHTUNG: .gitignore wirkt nur auf Dateien, die Git noch nicht kennt. Eine
+# bereits committete Datei bleibt getrackt. Dann:
+#   git rm --cached pfad/zur/config.php
+# und danach das Passwort aendern – in der Historie steht es weiterhin.
+
+# Kein Muster mit Slash: gilt damit in jedem Unterordner.
+*config.php
+secrets.php
+*.env
+.env
+
+# Die Vorlage ohne Werte gehoert ausdruecklich ins Repository.
+!config.template.php
+
+# ============================================================================
+# EDITOR – PhpStorm speichert in .idea/ auch FTP-Zugaenge
+# ============================================================================
+.idea/
+.vscode/
+
+# ============================================================================
+# LOKALE ARBEITSDATEIEN
+# ============================================================================
+2026_im2_javascript-main
+export.php
+out.pdf
+shots/
+node_modules/
+*.log
+.DS_Store
