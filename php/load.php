@@ -29,6 +29,14 @@ if (!is_file($configPath)) {
 require $configPath;
 
 $result = include __DIR__ . '/transform.php';
+
+if (!is_array($result)) {
+    die("FEHLER: transform.php hat kein Array zurückgegeben.\n");
+}
+
+echo "Transform wurde erfolgreich geladen.\n";
+echo "Keys: " . implode(', ', array_keys($result)) . "\n";
+
 $monthlyData = $result['monthlyDogData'];
 $imageData = $result['dogImageData'];
 $metadata = $result['metadata'];
