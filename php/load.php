@@ -1,13 +1,17 @@
 <?php
 /**
- * Load – schreibt die bereinigten Monatsdaten mit PDO in MySQL.
+ * Load – schreibt die bereinigten Monatsdaten und Bild-URLs mit PDO in MySQL.
  *
  * Vorher sql/schema.sql in phpMyAdmin ausführen. Danach diese Datei einmal
  * über die eigene Domain aufrufen.
  *
  * Diese Datei ist der letzte Schritt des ETL-Prozesses:
  *
- *   transform.php -> PHP-Arrays -> vorbereitete INSERTs -> MySQL
+ *   extract_image_dog.php -> transform.php -> PHP-Arrays -> INSERTs -> MySQL
+ *
+ * Speichert:
+ * - Monatliche Hundedaten in monthly_dog_statistics
+ * - Bild-URLs (nicht die Dateien selbst) in dog_images
  *
  * Alle Schreiboperationen laufen in einer Transaktion. Entweder wird der
  * komplette neue Datenstand gespeichert oder bei einem Fehler gar nichts.
@@ -42,7 +46,7 @@ $imageData = $result['dogImageData'];
 $metadata = $result['metadata'];
 
 echo "Transform liefert " . count($monthlyData) . " Monatsdaten.\n";
-echo "Transform liefert " . count($imageData) . " Bilder.\n\n";
+echo "Transform liefert " . count($imageData) . " Bild-URLs.\n\n";
 
 try {
     $pdo = new PDO($dsn, $username, $password, $options);
@@ -52,11 +56,11 @@ try {
 
     $deletedStats = $pdo->exec('DELETE FROM monthly_dog_statistics');
     $deletedImages = $pdo->exec('DELETE FROM dog_images');
-    $pdo->exec('DELETE FROM etl_audit');
 
     echo $deletedStats . " alte Monatsdaten gelöscht.\n";
-    echo $deletedImages . " alte Bilder gelöscht.\n\n";
+    echo $deletedImages . " alte Bild-URLs gelöscht.\n\n";
 
+    // Insert monatliche Statistiken (unverändert von früher)
     $insertStat = $pdo->prepare(
         'INSERT INTO monthly_dog_statistics
             (year, month, dogsInLand, dogsInShelter, dogShelters)
@@ -74,6 +78,7 @@ try {
         ]);
     }
 
+    // Insert Bild-URLs (nur die URLs, nicht die Dateien selbst)
     $insertImage = $pdo->prepare(
         'INSERT INTO dog_images (imageUrl, validated) VALUES (:imageUrl, :validated)'
     );
@@ -85,23 +90,10 @@ try {
         ]);
     }
 
-    $insertAudit = $pdo->prepare(
-        'INSERT INTO etl_audit (metric, value) VALUES (:metric, :value)'
-    );
-
-    foreach ($metadata as $metric => $value) {
-        if (!is_array($value)) {
-            $insertAudit->execute([
-                'metric' => $metric,
-                'value' => (string)$value,
-            ]);
-        }
-    }
-
     $pdo->commit();
 
     echo count($monthlyData) . " Monatsdaten geschrieben.\n";
-    echo count($imageData) . " Bilder geschrieben.\n\n";
+    echo count($imageData) . " Bild-URLs geschrieben.\n\n";
 
     $totalStats = $pdo->query('SELECT COUNT(*) FROM monthly_dog_statistics')->fetchColumn();
     echo "In monthly_dog_statistics stehen jetzt {$totalStats} Zeilen.\n\n";
@@ -110,7 +102,7 @@ try {
     echo "In dog_images stehen jetzt {$totalImages} Zeilen.\n\n";
 
     $check = $pdo->query(
-        'SELECT year, COUNT(*) AS months, 
+        'SELECT year, COUNT(*) AS months,
                 MIN(dogsInLand) AS minLand, MAX(dogsInLand) AS maxLand,
                 MIN(dogsInShelter) AS minShelter, MAX(dogsInShelter) AS maxShelter,
                 MIN(dogShelters) AS minShelters, MAX(dogShelters) AS maxShelters
