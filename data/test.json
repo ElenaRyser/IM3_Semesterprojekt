@@ -1,0 +1,911 @@
+{
+  "monthlyDogData": [
+    {
+      "year": 2016,
+      "month": 1,
+      "dogsInLand": 485504,
+      "dogsInShelter": 1326,
+      "dogShelters": 9
+    },
+    {
+      "year": 2016,
+      "month": 2,
+      "dogsInLand": 485807,
+      "dogsInShelter": 1332,
+      "dogShelters": 9
+    },
+    {
+      "year": 2016,
+      "month": 3,
+      "dogsInLand": 486499,
+      "dogsInShelter": 1336,
+      "dogShelters": 9
+    },
+    {
+      "year": 2016,
+      "month": 4,
+      "dogsInLand": 487337,
+      "dogsInShelter": 1336,
+      "dogShelters": 9
+    },
+    {
+      "year": 2016,
+      "month": 5,
+      "dogsInLand": 488025,
+      "dogsInShelter": 1341,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 6,
+      "dogsInLand": 489084,
+      "dogsInShelter": 1333,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 7,
+      "dogsInLand": 489052,
+      "dogsInShelter": 1323,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 8,
+      "dogsInLand": 489695,
+      "dogsInShelter": 1340,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 9,
+      "dogsInLand": 489998,
+      "dogsInShelter": 1382,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 10,
+      "dogsInLand": 490489,
+      "dogsInShelter": 1392,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 11,
+      "dogsInLand": 490950,
+      "dogsInShelter": 1390,
+      "dogShelters": 10
+    },
+    {
+      "year": 2016,
+      "month": 12,
+      "dogsInLand": 488989,
+      "dogsInShelter": 1390,
+      "dogShelters": 11
+    },
+    {
+      "year": 2017,
+      "month": 1,
+      "dogsInLand": 488664,
+      "dogsInShelter": 1401,
+      "dogShelters": 12
+    },
+    {
+      "year": 2017,
+      "month": 2,
+      "dogsInLand": 489370,
+      "dogsInShelter": 1379,
+      "dogShelters": 12
+    },
+    {
+      "year": 2017,
+      "month": 3,
+      "dogsInLand": 489850,
+      "dogsInShelter": 1341,
+      "dogShelters": 12
+    },
+    {
+      "year": 2017,
+      "month": 4,
+      "dogsInLand": 490509,
+      "dogsInShelter": 1332,
+      "dogShelters": 13
+    },
+    {
+      "year": 2017,
+      "month": 5,
+      "dogsInLand": 491656,
+      "dogsInShelter": 1383,
+      "dogShelters": 14
+    },
+    {
+      "year": 2017,
+      "month": 6,
+      "dogsInLand": 492600,
+      "dogsInShelter": 1966,
+      "dogShelters": 16
+    },
+    {
+      "year": 2017,
+      "month": 7,
+      "dogsInLand": 493111,
+      "dogsInShelter": 2040,
+      "dogShelters": 18
+    },
+    {
+      "year": 2017,
+      "month": 8,
+      "dogsInLand": 494275,
+      "dogsInShelter": 2218,
+      "dogShelters": 22
+    },
+    {
+      "year": 2017,
+      "month": 9,
+      "dogsInLand": 495009,
+      "dogsInShelter": 2249,
+      "dogShelters": 23
+    },
+    {
+      "year": 2017,
+      "month": 10,
+      "dogsInLand": 495879,
+      "dogsInShelter": 2282,
+      "dogShelters": 27
+    },
+    {
+      "year": 2017,
+      "month": 11,
+      "dogsInLand": 496500,
+      "dogsInShelter": 2294,
+      "dogShelters": 30
+    },
+    {
+      "year": 2017,
+      "month": 12,
+      "dogsInLand": 495976,
+      "dogsInShelter": 2308,
+      "dogShelters": 30
+    },
+    {
+      "year": 2018,
+      "month": 1,
+      "dogsInLand": 495506,
+      "dogsInShelter": 2236,
+      "dogShelters": 31
+    },
+    {
+      "year": 2018,
+      "month": 2,
+      "dogsInLand": 495983,
+      "dogsInShelter": 2221,
+      "dogShelters": 31
+    },
+    {
+      "year": 2018,
+      "month": 3,
+      "dogsInLand": 496842,
+      "dogsInShelter": 2156,
+      "dogShelters": 35
+    },
+    {
+      "year": 2018,
+      "month": 4,
+      "dogsInLand": 497792,
+      "dogsInShelter": 2142,
+      "dogShelters": 35
+    },
+    {
+      "year": 2018,
+      "month": 5,
+      "dogsInLand": 498111,
+      "dogsInShelter": 2152,
+      "dogShelters": 36
+    },
+    {
+      "year": 2018,
+      "month": 6,
+      "dogsInLand": 499064,
+      "dogsInShelter": 2180,
+      "dogShelters": 39
+    },
+    {
+      "year": 2018,
+      "month": 7,
+      "dogsInLand": 499435,
+      "dogsInShelter": 2170,
+      "dogShelters": 40
+    },
+    {
+      "year": 2018,
+      "month": 8,
+      "dogsInLand": 500222,
+      "dogsInShelter": 2169,
+      "dogShelters": 41
+    },
+    {
+      "year": 2018,
+      "month": 9,
+      "dogsInLand": 500911,
+      "dogsInShelter": 2154,
+      "dogShelters": 40
+    },
+    {
+      "year": 2018,
+      "month": 10,
+      "dogsInLand": 501597,
+      "dogsInShelter": 2193,
+      "dogShelters": 42
+    },
+    {
+      "year": 2018,
+      "month": 11,
+      "dogsInLand": 501622,
+      "dogsInShelter": 2180,
+      "dogShelters": 42
+    },
+    {
+      "year": 2018,
+      "month": 12,
+      "dogsInLand": 500942,
+      "dogsInShelter": 2156,
+      "dogShelters": 42
+    },
+    {
+      "year": 2019,
+      "month": 1,
+      "dogsInLand": 500491,
+      "dogsInShelter": 2066,
+      "dogShelters": 43
+    },
+    {
+      "year": 2019,
+      "month": 2,
+      "dogsInLand": 501080,
+      "dogsInShelter": 2039,
+      "dogShelters": 42
+    },
+    {
+      "year": 2019,
+      "month": 3,
+      "dogsInLand": 502019,
+      "dogsInShelter": 2074,
+      "dogShelters": 43
+    },
+    {
+      "year": 2019,
+      "month": 4,
+      "dogsInLand": 503101,
+      "dogsInShelter": 2115,
+      "dogShelters": 46
+    },
+    {
+      "year": 2019,
+      "month": 5,
+      "dogsInLand": 503948,
+      "dogsInShelter": 2125,
+      "dogShelters": 48
+    },
+    {
+      "year": 2019,
+      "month": 6,
+      "dogsInLand": 504334,
+      "dogsInShelter": 2140,
+      "dogShelters": 47
+    },
+    {
+      "year": 2019,
+      "month": 7,
+      "dogsInLand": 504318,
+      "dogsInShelter": 2114,
+      "dogShelters": 50
+    },
+    {
+      "year": 2019,
+      "month": 8,
+      "dogsInLand": 505284,
+      "dogsInShelter": 2158,
+      "dogShelters": 50
+    },
+    {
+      "year": 2019,
+      "month": 9,
+      "dogsInLand": 505596,
+      "dogsInShelter": 2124,
+      "dogShelters": 50
+    },
+    {
+      "year": 2019,
+      "month": 10,
+      "dogsInLand": 506182,
+      "dogsInShelter": 2150,
+      "dogShelters": 50
+    },
+    {
+      "year": 2019,
+      "month": 11,
+      "dogsInLand": 506882,
+      "dogsInShelter": 2137,
+      "dogShelters": 51
+    },
+    {
+      "year": 2019,
+      "month": 12,
+      "dogsInLand": 506431,
+      "dogsInShelter": 2154,
+      "dogShelters": 53
+    },
+    {
+      "year": 2020,
+      "month": 1,
+      "dogsInLand": 506136,
+      "dogsInShelter": 2126,
+      "dogShelters": 50
+    },
+    {
+      "year": 2020,
+      "month": 2,
+      "dogsInLand": 506747,
+      "dogsInShelter": 2165,
+      "dogShelters": 51
+    },
+    {
+      "year": 2020,
+      "month": 3,
+      "dogsInLand": 507246,
+      "dogsInShelter": 2156,
+      "dogShelters": 53
+    },
+    {
+      "year": 2020,
+      "month": 4,
+      "dogsInLand": 507572,
+      "dogsInShelter": 2131,
+      "dogShelters": 54
+    },
+    {
+      "year": 2020,
+      "month": 5,
+      "dogsInLand": 508505,
+      "dogsInShelter": 2126,
+      "dogShelters": 54
+    },
+    {
+      "year": 2020,
+      "month": 6,
+      "dogsInLand": 509850,
+      "dogsInShelter": 2114,
+      "dogShelters": 57
+    },
+    {
+      "year": 2020,
+      "month": 7,
+      "dogsInLand": 510851,
+      "dogsInShelter": 2055,
+      "dogShelters": 56
+    },
+    {
+      "year": 2020,
+      "month": 8,
+      "dogsInLand": 512656,
+      "dogsInShelter": 2072,
+      "dogShelters": 55
+    },
+    {
+      "year": 2020,
+      "month": 9,
+      "dogsInLand": 514027,
+      "dogsInShelter": 2092,
+      "dogShelters": 56
+    },
+    {
+      "year": 2020,
+      "month": 10,
+      "dogsInLand": 515922,
+      "dogsInShelter": 2033,
+      "dogShelters": 56
+    },
+    {
+      "year": 2020,
+      "month": 11,
+      "dogsInLand": 517412,
+      "dogsInShelter": 2044,
+      "dogShelters": 56
+    },
+    {
+      "year": 2020,
+      "month": 12,
+      "dogsInLand": 518029,
+      "dogsInShelter": 2041,
+      "dogShelters": 59
+    },
+    {
+      "year": 2021,
+      "month": 1,
+      "dogsInLand": 519509,
+      "dogsInShelter": 1989,
+      "dogShelters": 60
+    },
+    {
+      "year": 2021,
+      "month": 2,
+      "dogsInLand": 520903,
+      "dogsInShelter": 1997,
+      "dogShelters": 63
+    },
+    {
+      "year": 2021,
+      "month": 3,
+      "dogsInLand": 522662,
+      "dogsInShelter": 2020,
+      "dogShelters": 65
+    },
+    {
+      "year": 2021,
+      "month": 4,
+      "dogsInLand": 524569,
+      "dogsInShelter": 2006,
+      "dogShelters": 68
+    },
+    {
+      "year": 2021,
+      "month": 5,
+      "dogsInLand": 527273,
+      "dogsInShelter": 1996,
+      "dogShelters": 68
+    },
+    {
+      "year": 2021,
+      "month": 6,
+      "dogsInLand": 528590,
+      "dogsInShelter": 2068,
+      "dogShelters": 69
+    },
+    {
+      "year": 2021,
+      "month": 7,
+      "dogsInLand": 530170,
+      "dogsInShelter": 2061,
+      "dogShelters": 69
+    },
+    {
+      "year": 2021,
+      "month": 8,
+      "dogsInLand": 531943,
+      "dogsInShelter": 2024,
+      "dogShelters": 67
+    },
+    {
+      "year": 2021,
+      "month": 9,
+      "dogsInLand": 532909,
+      "dogsInShelter": 2022,
+      "dogShelters": 68
+    },
+    {
+      "year": 2021,
+      "month": 10,
+      "dogsInLand": 534456,
+      "dogsInShelter": 2051,
+      "dogShelters": 71
+    },
+    {
+      "year": 2021,
+      "month": 11,
+      "dogsInLand": 536123,
+      "dogsInShelter": 2033,
+      "dogShelters": 70
+    },
+    {
+      "year": 2021,
+      "month": 12,
+      "dogsInLand": 536720,
+      "dogsInShelter": 1984,
+      "dogShelters": 69
+    },
+    {
+      "year": 2022,
+      "month": 1,
+      "dogsInLand": 537927,
+      "dogsInShelter": 1951,
+      "dogShelters": 70
+    },
+    {
+      "year": 2022,
+      "month": 2,
+      "dogsInLand": 538785,
+      "dogsInShelter": 1909,
+      "dogShelters": 74
+    },
+    {
+      "year": 2022,
+      "month": 3,
+      "dogsInLand": 539524,
+      "dogsInShelter": 1899,
+      "dogShelters": 75
+    },
+    {
+      "year": 2022,
+      "month": 4,
+      "dogsInLand": 541973,
+      "dogsInShelter": 1897,
+      "dogShelters": 75
+    },
+    {
+      "year": 2022,
+      "month": 5,
+      "dogsInLand": 543898,
+      "dogsInShelter": 1872,
+      "dogShelters": 77
+    },
+    {
+      "year": 2022,
+      "month": 6,
+      "dogsInLand": 544793,
+      "dogsInShelter": 1908,
+      "dogShelters": 77
+    },
+    {
+      "year": 2022,
+      "month": 7,
+      "dogsInLand": 545488,
+      "dogsInShelter": 1919,
+      "dogShelters": 78
+    },
+    {
+      "year": 2022,
+      "month": 8,
+      "dogsInLand": 546589,
+      "dogsInShelter": 1941,
+      "dogShelters": 81
+    },
+    {
+      "year": 2022,
+      "month": 9,
+      "dogsInLand": 547638,
+      "dogsInShelter": 1967,
+      "dogShelters": 81
+    },
+    {
+      "year": 2022,
+      "month": 10,
+      "dogsInLand": 548873,
+      "dogsInShelter": 1904,
+      "dogShelters": 82
+    },
+    {
+      "year": 2022,
+      "month": 11,
+      "dogsInLand": 549814,
+      "dogsInShelter": 1900,
+      "dogShelters": 81
+    },
+    {
+      "year": 2022,
+      "month": 12,
+      "dogsInLand": 549588,
+      "dogsInShelter": 1901,
+      "dogShelters": 80
+    },
+    {
+      "year": 2023,
+      "month": 1,
+      "dogsInLand": 550364,
+      "dogsInShelter": 1822,
+      "dogShelters": 84
+    },
+    {
+      "year": 2023,
+      "month": 2,
+      "dogsInLand": 550737,
+      "dogsInShelter": 1803,
+      "dogShelters": 84
+    },
+    {
+      "year": 2023,
+      "month": 3,
+      "dogsInLand": 551722,
+      "dogsInShelter": 1804,
+      "dogShelters": 81
+    },
+    {
+      "year": 2023,
+      "month": 4,
+      "dogsInLand": 552841,
+      "dogsInShelter": 1813,
+      "dogShelters": 80
+    },
+    {
+      "year": 2023,
+      "month": 5,
+      "dogsInLand": 553858,
+      "dogsInShelter": 1833,
+      "dogShelters": 83
+    },
+    {
+      "year": 2023,
+      "month": 6,
+      "dogsInLand": 554203,
+      "dogsInShelter": 1815,
+      "dogShelters": 85
+    },
+    {
+      "year": 2023,
+      "month": 7,
+      "dogsInLand": 554522,
+      "dogsInShelter": 1770,
+      "dogShelters": 84
+    },
+    {
+      "year": 2023,
+      "month": 8,
+      "dogsInLand": 555210,
+      "dogsInShelter": 1767,
+      "dogShelters": 82
+    },
+    {
+      "year": 2023,
+      "month": 9,
+      "dogsInLand": 555547,
+      "dogsInShelter": 1807,
+      "dogShelters": 83
+    },
+    {
+      "year": 2023,
+      "month": 10,
+      "dogsInLand": 555964,
+      "dogsInShelter": 1802,
+      "dogShelters": 84
+    },
+    {
+      "year": 2023,
+      "month": 11,
+      "dogsInLand": 556042,
+      "dogsInShelter": 1754,
+      "dogShelters": 84
+    },
+    {
+      "year": 2023,
+      "month": 12,
+      "dogsInLand": 555558,
+      "dogsInShelter": 1685,
+      "dogShelters": 84
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "dogsInLand": 555516,
+      "dogsInShelter": 1622,
+      "dogShelters": 87
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "dogsInLand": 555333,
+      "dogsInShelter": 1605,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "dogsInLand": 556011,
+      "dogsInShelter": 1612,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "dogsInLand": 556654,
+      "dogsInShelter": 1590,
+      "dogShelters": 88
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "dogsInLand": 557111,
+      "dogsInShelter": 1590,
+      "dogShelters": 86
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "dogsInLand": 557069,
+      "dogsInShelter": 1652,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "dogsInLand": 556517,
+      "dogsInShelter": 1602,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "dogsInLand": 556641,
+      "dogsInShelter": 1566,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "dogsInLand": 556474,
+      "dogsInShelter": 1586,
+      "dogShelters": 90
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "dogsInLand": 556517,
+      "dogsInShelter": 1577,
+      "dogShelters": 89
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "dogsInLand": 556338,
+      "dogsInShelter": 1608,
+      "dogShelters": 91
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "dogsInLand": 555248,
+      "dogsInShelter": 1451,
+      "dogShelters": 92
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "dogsInLand": 555244,
+      "dogsInShelter": 1415,
+      "dogShelters": 90
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "dogsInLand": 555055,
+      "dogsInShelter": 1402,
+      "dogShelters": 87
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "dogsInLand": 555182,
+      "dogsInShelter": 1335,
+      "dogShelters": 87
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "dogsInLand": 555217,
+      "dogsInShelter": 1342,
+      "dogShelters": 90
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "dogsInLand": 555506,
+      "dogsInShelter": 1366,
+      "dogShelters": 89
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "dogsInLand": 554970,
+      "dogsInShelter": 1340,
+      "dogShelters": 89
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "dogsInLand": 554028,
+      "dogsInShelter": 1301,
+      "dogShelters": 90
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "dogsInLand": 554009,
+      "dogsInShelter": 1355,
+      "dogShelters": 91
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "dogsInLand": 553553,
+      "dogsInShelter": 1356,
+      "dogShelters": 93
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "dogsInLand": 553472,
+      "dogsInShelter": 1324,
+      "dogShelters": 91
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "dogsInLand": 553449,
+      "dogsInShelter": 1289,
+      "dogShelters": 89
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "dogsInLand": 552538,
+      "dogsInShelter": 1288,
+      "dogShelters": 91
+    },
+    {
+      "year": 2026,
+      "month": 1,
+      "dogsInLand": 552419,
+      "dogsInShelter": 1294,
+      "dogShelters": 86
+    },
+    {
+      "year": 2026,
+      "month": 2,
+      "dogsInLand": 552017,
+      "dogsInShelter": 1293,
+      "dogShelters": 87
+    },
+    {
+      "year": 2026,
+      "month": 3,
+      "dogsInLand": 551650,
+      "dogsInShelter": 1284,
+      "dogShelters": 86
+    },
+    {
+      "year": 2026,
+      "month": 4,
+      "dogsInLand": 551761,
+      "dogsInShelter": 1293,
+      "dogShelters": 86
+    },
+    {
+      "year": 2026,
+      "month": 5,
+      "dogsInLand": 551866,
+      "dogsInShelter": 1316,
+      "dogShelters": 86
+    },
+    {
+      "year": 2026,
+      "month": 6,
+      "dogsInLand": 551298,
+      "dogsInShelter": 1312,
+      "dogShelters": 86
+    },
+    {
+      "year": 2026,
+      "month": 7,
+      "dogsInLand": 550369,
+      "dogsInShelter": 1313,
+      "dogShelters": 85
+    },
+    {
+      "year": 2026,
+      "month": 8,
+      "dogsInLand": 548850,
+      "dogsInShelter": 1302,
+      "dogShelters": 85
+    }
+  ],
+  "dogImageData": [
+    {
+      "imageUrl": "https://images.dog.ceo/breeds/pekinese/n02086079_4456.jpg",
+      "validated": true
+    }
+  ],
+  "metadata": {
+    "totalMonths": 128,
+    "totalImages": 1,
+    "timestamp": "2026-10-03 08:29:19"
+  }
+}

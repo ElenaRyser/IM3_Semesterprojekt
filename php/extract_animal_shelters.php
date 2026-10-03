@@ -1,15 +1,4 @@
 <?php
-/**
- * Code-Along 08: CSV lesen (Extract)
- *
- * Dritte Extract-Quelle: eine echte CSV-Datei. Wir lesen das Shark Attack File
- * (GSAF) ein und verwandeln jede Zeile in ein assoziatives Array. Kein Endpunkt,
- * kein Filter - nur lesen. PHP gibt hier reinen Text aus.
- *
- * Gleiche Idee wie bei JSON und API: Quelle -> PHP-Array von Datensätzen.
- * Echte Daten sind unordentlich: viele leere Zeilen, Spaltennamen mit
- * Leerzeichen. Damit gehen wir hier bewusst um.
- */
 
 header('Content-Type: text/plain; charset=utf-8');
 
