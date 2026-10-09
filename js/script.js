@@ -1,11 +1,11 @@
 /**
  * script.js – holt die Daten von unload.php und bringt sie auf die Seite.
  *
- * Schritt 1: Daten holen und in der Konsole anzeigen.
- * Schritt 2: Dezember-Werte herausfiltern (eine Zeile pro Jahr).
- * Schritt 3: Kennzahlen (grosse Zahlen in den Grafik-Karten) einsetzen.
- * Schritt 4: Hundebilder in die Polaroids und die Bildkarte einsetzen.
- * Grafiken: mit Chart.js, eine Funktion pro Grafik.
+ * Aufbau dieser Datei:
+ *   1. Daten holen (loadData) und Hilfsfunktionen zum Formatieren
+ *   2. GRAFIKEN: Grundeinstellungen, Bausteine und 4 Grafik-Funktionen
+ *   3. NAVIGATION: dunkle Pille zeigt das aktuelle Kapitel
+ *   4. START: Daten laden, Kennzahlen einsetzen, Grafiken einrichten, Bilder einsetzen
  */
 
 // Adresse unseres Endpunkts.
@@ -38,11 +38,26 @@ function formatNumber(number) {
     return number.toLocaleString('de-CH');
 }
 
-// Veränderung in Prozent, gerundet und mit Vorzeichen: "+10 %" oder "−40 %"
+// Veränderung in Prozent (nicht gerundet): von 2156 auf 1288 = −40.26
+function percentChange(start, end) {
+    return (end - start) / start * 100;
+}
+
+// Prozentwert gerundet und mit Vorzeichen: 9.7 wird "+10 %", −40.26 wird "−40 %"
+function formatPercent(percent) {
+    const rounded = Math.round(percent);
+
+    if (rounded === 0) {
+        return '0 %';
+    }
+
+    const sign = rounded > 0 ? '+' : '−';
+    return `${sign}${Math.abs(rounded)} %`;
+}
+
+// Veränderung von start zu end als Text: "+10 %" oder "−40 %"
 function formatChange(start, end) {
-    const percent = Math.round((end - start) / start * 100);
-    const sign = percent > 0 ? '+' : '−';
-    return `${sign}${Math.abs(percent)} %`;
+    return formatPercent(percentChange(start, end));
 }
 
 // Schreibt einen Text in das HTML-Element mit dieser id
@@ -59,31 +74,93 @@ const COLORS = {
     cream: '#f3efe7',
     bordeaux: '#3b0f0f',
     orange: '#c9592f',
-    grid: 'rgba(243, 239, 231, 0.12)', // feine Hilfslinien
+    peach: '#f2b48a',                   // helles Orange für Akzente auf dunklem Grund
+    grid: 'rgba(243, 239, 231, 0.12)',  // feine Hilfslinien auf dunklem Grund
 };
-
-// Grundeinstellungen für ALLE Grafiken.
-// So müssen wir das nicht bei jeder Grafik einzeln angeben.
-Chart.defaults.font.family = 'Roboto, sans-serif';
-Chart.defaults.color = 'rgba(243, 239, 231, 0.75)'; // Achsenbeschriftung: helles Creme
-Chart.defaults.maintainAspectRatio = false;          // Höhe kommt aus dem CSS (.chart-box)
-
-// Tooltip (erscheint beim Darüberfahren): helles Kästchen mit dunkler Schrift
-Chart.defaults.plugins.tooltip.backgroundColor = COLORS.cream;
-Chart.defaults.plugins.tooltip.titleColor = COLORS.bordeaux;
-Chart.defaults.plugins.tooltip.bodyColor = COLORS.bordeaux;
-Chart.defaults.plugins.tooltip.padding = 10;
-Chart.defaults.plugins.tooltip.displayColors = false; // kein farbiges Kästchen vor dem Text
-
-// --- Bausteine, die mehrere Grafiken verwenden können -----------------------
 
 // Dauer der Animation "von links nach rechts zeichnen" in Millisekunden
 const REVEAL_DURATION = 2000;
 
+// --- Grundeinstellungen für ALLE Grafiken -----------------------------------
+// So müssen wir das nicht bei jeder Grafik einzeln angeben.
+
+Chart.defaults.font.family = 'Roboto, sans-serif';
+Chart.defaults.color = 'rgba(243, 239, 231, 0.75)'; // Achsenbeschriftung: helles Creme
+Chart.defaults.maintainAspectRatio = false;          // Höhe kommt aus dem CSS (.chart-box)
+Chart.defaults.animation = false;                    // eigene Animation: siehe revealFromLeft
+
+// Tooltip erscheint, sobald die Maus in der Nähe eines Werts ist
+// (man muss nicht genau den kleinen Punkt treffen)
+Chart.defaults.interaction.mode = 'index';
+Chart.defaults.interaction.intersect = false;
+
+// Tooltip: helles Kästchen mit dunkler Schrift, ohne farbiges Kästchen vor dem Text
+Chart.defaults.plugins.tooltip.backgroundColor = COLORS.cream;
+Chart.defaults.plugins.tooltip.titleColor = COLORS.bordeaux;
+Chart.defaults.plugins.tooltip.bodyColor = COLORS.bordeaux;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.displayColors = false;
+
+// Legende standardmässig aus (nur die Prolog-Grafik braucht eine)
+Chart.defaults.plugins.legend.display = false;
+
+// --- Bausteine, die alle Grafiken verwenden ---------------------------------
+
+// Plugin: schreibt einzelne Werte direkt an die Grafik, z. B. "91" oder "Höchststand: 2'308".
+// Welche Werte, steht bei jeder Grafik unter options.plugins.pointLabels.labels:
+//   { index: 9, text: '91', position: 'above' }
+//   datasetIndex: welche Linie (Standard 0), color: Schriftfarbe (Standard Creme)
+//   position: 'above' (über dem Punkt), 'aboveLeft' (über dem Punkt, nach links),
+//             'below', 'belowRight', 'belowLeft' oder 'right' (rechts daneben)
+// Chart.js ruft afterDatasetsDraw jedes Mal auf, nachdem die Linien gezeichnet wurden.
+const pointLabels = {
+    id: 'pointLabels',
+    afterDatasetsDraw(chart, args, options) {
+        const labels = options.labels ?? [];
+        const { ctx } = chart;
+
+        ctx.save();
+        ctx.font = 'bold 13px Roboto, sans-serif';
+
+        for (const label of labels) {
+            // Der Punkt (bzw. Balken), an den die Beschriftung gehört
+            const point = chart.getDatasetMeta(label.datasetIndex ?? 0).data[label.index];
+            if (!point) {
+                continue;
+            }
+
+            const { x, y } = point;
+            ctx.fillStyle = label.color ?? COLORS.cream;
+
+            if (label.position === 'right') {
+                ctx.textAlign = 'left';
+                ctx.fillText(label.text, x + 10, y + 4);
+            } else if (label.position === 'below') {
+                ctx.textAlign = 'center';
+                ctx.fillText(label.text, x, y + 22);
+            } else if (label.position === 'belowRight') {
+                ctx.textAlign = 'left';
+                ctx.fillText(label.text, x + 10, y + 20);
+            } else if (label.position === 'belowLeft') {
+                ctx.textAlign = 'right';
+                ctx.fillText(label.text, x + 6, y + 22);
+            } else if (label.position === 'aboveLeft') {
+                ctx.textAlign = 'right';
+                ctx.fillText(label.text, x + 6, y - 14);
+            } else {
+                ctx.textAlign = 'center';            // 'above'
+                ctx.fillText(label.text, x, y - 14);
+            }
+        }
+
+        ctx.restore();
+    },
+};
+
 // Plugin: deckt die Grafik gleichmässig von links nach rechts auf –
 // wie ein Vorhang, der zur Seite gezogen wird. So sieht es aus,
-// als würde die Linie gezeichnet.
-// Funktionsweise: Vor dem Zeichnen der Linie legen wir eine "Schablone" (clip)
+// als würde die Linie gezeichnet (bei Balken: als würden sie wachsen).
+// Funktionsweise: Vor dem Zeichnen legen wir eine "Schablone" (clip)
 // über die Grafik. Nur was links vom Vorhang liegt, wird sichtbar.
 // Bei jedem Bild (Frame) rückt der Vorhang ein Stück nach rechts.
 const revealFromLeft = {
@@ -111,12 +188,13 @@ const revealFromLeft = {
         requestAnimationFrame(frame);
     },
 
-    // Vor dem Zeichnen der Linie: Schablone bis zur aktuellen Vorhang-Position
+    // Vor dem Zeichnen der Linien: Schablone bis zur aktuellen Vorhang-Position
     beforeDatasetsDraw(chart) {
         const { ctx, chartArea } = chart;
-        // 10 px Zugabe links und rechts, damit die runden Punkte am Rand ganz sichtbar sind
+        // 10 px Zugabe links, damit die runden Punkte am Rand ganz sichtbar sind;
+        // rechts zusätzlich Platz für die Beschriftungen neben dem letzten Punkt
         const left = chartArea.left - 10;
-        const width = (chartArea.width + 20) * chart.$reveal;
+        const width = (chart.width - left) * chart.$reveal;
 
         ctx.save();
         ctx.beginPath();
@@ -124,7 +202,7 @@ const revealFromLeft = {
         ctx.clip();
     },
 
-    // Nach dem Zeichnen der Linie: Schablone wieder wegnehmen
+    // Nach dem Zeichnen der Linien: Schablone wieder wegnehmen
     afterDatasetsDraw(chart) {
         chart.ctx.restore();
     },
@@ -135,52 +213,28 @@ const revealFromLeft = {
     },
 };
 
-// Fläche unter der Linie: Farbverlauf von Orange (oben) zu durchsichtig (unten)
-function gradientFill(context) {
-    const { ctx, chartArea } = context.chart;
+// Beide Plugins für ALLE Grafiken anmelden.
+// Reihenfolge wichtig: pointLabels zuerst, damit auch die Beschriftungen
+// erst erscheinen, wenn der "Vorhang" sie erreicht.
+Chart.register(pointLabels, revealFromLeft);
 
-    // Beim allerersten Zeichnen ist die Grösse der Grafik noch nicht bekannt
-    if (!chartArea) {
-        return null;
-    }
+// Fläche unter einer Linie: Farbverlauf von oben (kräftig) nach unten (durchsichtig).
+// rgb: Farbe als "Rot, Grün, Blau", z. B. '201, 89, 47' für Orange
+function gradientFill(rgb) {
+    return (context) => {
+        const { ctx, chartArea } = context.chart;
 
-    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-    gradient.addColorStop(0, 'rgba(201, 89, 47, 0.7)');
-    gradient.addColorStop(1, 'rgba(201, 89, 47, 0)');
-    return gradient;
-}
-
-// Plugin: schreibt den ersten und den letzten Wert direkt an die Linie (wie im Figma).
-// Chart.js ruft afterDatasetsDraw jedes Mal auf, nachdem die Linie gezeichnet wurde.
-const endLabels = {
-    id: 'endLabels',
-    afterDatasetsDraw(chart) {
-        const { ctx } = chart;
-        const points = chart.getDatasetMeta(0).data;
-        const values = chart.data.datasets[0].data;
-        const lastIndex = points.length - 1;
-
-        ctx.save();
-        ctx.font = 'bold 14px Roboto, sans-serif';
-        ctx.fillStyle = COLORS.cream;
-
-        for (const index of [0, lastIndex]) {
-            // Position des Punkts auf dem Canvas
-            const { x, y } = points[index];
-            const text = formatNumber(values[index]);
-
-            if (index === 0) {
-                ctx.textAlign = 'left';
-                ctx.fillText(text, x + 10, y + 20); // erster Wert: rechts unterhalb
-            } else {
-                ctx.textAlign = 'center';
-                ctx.fillText(text, x, y - 14);      // letzter Wert: oberhalb
-            }
+        // Beim allerersten Zeichnen ist die Grösse der Grafik noch nicht bekannt
+        if (!chartArea) {
+            return null;
         }
 
-        ctx.restore();
-    },
-};
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, `rgba(${rgb}, 0.7)`);
+        gradient.addColorStop(1, `rgba(${rgb}, 0)`);
+        return gradient;
+    };
+}
 
 // Zeichnet eine Grafik (neu). Gibt es auf dem Canvas schon eine,
 // wird sie zuerst gelöscht – so startet die Animation wieder von vorne.
@@ -216,60 +270,296 @@ function setupChart(canvasId, createChart) {
     replayButton.addEventListener('click', () => drawChart(canvasId, createChart));
 }
 
-// --- Die einzelnen Grafiken -------------------------------------------------
-
-// Grafik "Die Karte": Anzahl Tierheime, Stand Dezember 2016–2025
-function createHeimeChart(december) {
-    return new Chart(document.getElementById('chart-heime'), {
+// --- Funktion 1: Liniengrafik mit einer Linie ---------------------------------
+// Für "Die Karte" (Tierheime) und "Hunde-Fieber" (registrierte Hunde).
+// Einstellungen (settings):
+//   canvasId     id des <canvas>
+//   labels       x-Achse, z. B. [2016, …, 2025]
+//   values       y-Werte, z. B. [11, …, 91]
+//   unit         Text im Tooltip nach der Zahl, z. B. 'Tierheime'
+//   fillRgb      Farbe der Fläche unter der Linie, z. B. '201, 89, 47'
+//   y            Achse: { min, max, stepSize }
+//   pointLabels  Beschriftungen an der Linie (siehe Plugin pointLabels)
+function createLineChart(settings) {
+    return new Chart(document.getElementById(settings.canvasId), {
         type: 'line',
         data: {
-            // x-Achse: die Jahre
-            labels: december.map(row => row.year),
+            labels: settings.labels,
             datasets: [{
-                label: 'Tierheime',
-                // y-Werte: Anzahl Tierheime pro Jahr
-                data: december.map(row => row.animal_shelter),
-                borderColor: COLORS.cream,         // Linie: Creme
+                data: settings.values,
+                borderColor: COLORS.cream,                  // Linie: Creme
                 borderWidth: 3,
-                backgroundColor: gradientFill,     // Fläche: Farbverlauf
-                fill: true,                        // Fläche unter der Linie füllen
-                pointBackgroundColor: COLORS.bordeaux, // Punkte: innen Bordeaux …
-                pointBorderColor: COLORS.cream,        // … mit Creme-Rand
+                backgroundColor: gradientFill(settings.fillRgb),
+                fill: true,                                 // Fläche unter der Linie füllen
+                pointBackgroundColor: COLORS.bordeaux,      // Punkte: innen Bordeaux …
+                pointBorderColor: COLORS.cream,             // … mit Creme-Rand
                 pointBorderWidth: 2,
                 pointRadius: 5,
                 pointHoverRadius: 7,
             }],
         },
-        // Plugins: Beschriftung "11" und "91" an der Linie, Aufdecken von links nach rechts.
-        // Reihenfolge wichtig: endLabels zuerst, damit auch die Beschriftung
-        // erst erscheint, wenn der "Vorhang" sie erreicht.
-        plugins: [endLabels, revealFromLeft],
         options: {
-            animation: false, // Chart.js-eigene Animation aus – wir animieren mit revealFromLeft
-            // Platz oben und rechts, damit die Beschriftung "91" nicht abgeschnitten wird
-            layout: { padding: { top: 24, right: 12 } },
-            // Tooltip erscheint, sobald die Maus in der Nähe eines Jahres ist
-            interaction: { mode: 'index', intersect: false },
+            // Platz oben und rechts, damit die Beschriftungen nicht abgeschnitten werden
+            layout: { padding: { top: 24, right: 16 } },
             plugins: {
-                legend: { display: false }, // nur eine Linie, Legende unnötig
+                pointLabels: { labels: settings.pointLabels },
                 tooltip: {
                     callbacks: {
                         // Text im Tooltip, z. B. "91 Tierheime"
-                        label: (context) => `${formatNumber(context.parsed.y)} Tierheime`,
+                        label: (context) => `${formatNumber(context.parsed.y)} ${settings.unit}`,
                     },
                 },
             },
             scales: {
                 x: {
-                    grid: { display: false }, // keine senkrechten Linien
-                    ticks: { maxRotation: 0 }, // Jahre nie schräg stellen (auf dem Handy werden einige ausgelassen)
+                    grid: { display: false },  // keine senkrechten Linien
+                    ticks: { maxRotation: 0 }, // Jahre nie schräg (auf dem Handy werden einige ausgelassen)
+                },
+                y: {
+                    min: settings.y.min,
+                    max: settings.y.max,
+                    ticks: {
+                        stepSize: settings.y.stepSize,
+                        callback: (value) => formatNumber(value), // 500000 → 500’000
+                    },
+                    grid: { color: COLORS.grid },
+                    border: { display: false }, // keine senkrechte Achsenlinie
+                },
+            },
+        },
+    });
+}
+
+// --- Funktion 2: "Im Tierheim" – alle Monate als Fläche -----------------------
+// Zeigt die Hunde im Tierheim für jeden Monat 2016–2025.
+// Hervorgehoben: der Höchststand und der letzte Wert.
+// months: alle Monatszeilen aus unload.php
+function createShelterChart(months) {
+    const values = months.map(row => row.total_dogs_shelter);
+
+    // Monatsname für den Tooltip, z. B. "Dezember 2017"
+    const labels = months.map(row =>
+        new Date(row.year, row.month - 1).toLocaleDateString('de-CH', { month: 'long', year: 'numeric' }));
+
+    // Wo ist der Höchststand? Und wo der letzte Wert?
+    const peakIndex = values.indexOf(Math.max(...values));
+    const lastIndex = values.length - 1;
+
+    return new Chart(document.getElementById('chart-tierheim'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                borderColor: COLORS.cream,
+                borderWidth: 2.5,
+                backgroundColor: gradientFill('243, 239, 231'), // Fläche: Creme-Verlauf
+                fill: true,
+                tension: 0.2, // Linie leicht abgerundet
+                // Nur Höchststand und letzter Wert bekommen einen Punkt
+                pointRadius: (context) => [peakIndex, lastIndex].includes(context.dataIndex) ? 5 : 0,
+                pointBackgroundColor: COLORS.peach,
+                pointBorderWidth: 0,
+                pointHoverRadius: 5,
+            }],
+        },
+        options: {
+            layout: { padding: { top: 24, right: 56 } }, // rechts Platz für "1'288"
+            plugins: {
+                pointLabels: {
+                    labels: [
+                        { index: peakIndex, text: `Höchststand: ${formatNumber(values[peakIndex])}`, position: 'above' },
+                        { index: lastIndex, text: formatNumber(values[lastIndex]), position: 'right' },
+                    ],
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `${formatNumber(context.parsed.y)} Hunde im Heim`,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        autoSkip: false, // wir bestimmen selbst, welche Beschriftungen erscheinen
+                        maxRotation: 0,
+                        // Nur jeden Januar eines geraden Jahres beschriften: 2016, 2018, …
+                        callback: (value, index) => {
+                            const row = months[index];
+                            return row.month === 1 && row.year % 2 === 0 ? row.year : null;
+                        },
+                    },
                 },
                 y: {
                     min: 0,
-                    max: 100,
-                    ticks: { stepSize: 25 },
+                    max: 2500,
+                    ticks: {
+                        stepSize: 500,
+                        callback: (value) => formatNumber(value),
+                    },
                     grid: { color: COLORS.grid },
-                    border: { display: false }, // keine senkrechte Achsenlinie
+                    border: { display: false },
+                },
+            },
+        },
+    });
+}
+
+// --- Funktion 3: Veränderung in Prozent seit 2018 (zwei Linien) ---------------
+// Für "Prolog" (Tierheime / Hunde im Heim) und "P1" (Hunde im Land / Hunde im Heim).
+// Alle Werte werden mit dem ersten Jahr (2018) verglichen: 2018 = 0 %.
+// Einstellungen (settings):
+//   canvasId    id des <canvas>
+//   rows        Dezember-Zeilen ab 2018
+//   series      die Linien: [{ label, key, unit, color, labelColor }]
+//               key = Spalte aus den Daten, z. B. 'animal_shelter'
+//   showLegend  Legende oben anzeigen? (true/false)
+//   showPoints  Punkte auf den Linien? (true/false)
+//   textColor   Farbe der Achsenbeschriftung (für helle Karten dunkel)
+//   gridColor   Farbe der Hilfslinien
+//   y           Achse: { min, max, stepSize }
+function createChangeChart(settings) {
+    const base = settings.rows[0];                // Vergleichsjahr 2018
+    const lastIndex = settings.rows.length - 1;
+
+    // Pro Linie: Prozentwerte für die Grafik, absolute Werte für den Tooltip
+    const datasets = settings.series.map(serie => ({
+        label: serie.label,
+        data: settings.rows.map(row => percentChange(base[serie.key], row[serie.key])),
+        absolute: settings.rows.map(row => row[serie.key]), // eigene Angabe, nutzen wir im Tooltip
+        unit: serie.unit,
+        borderColor: serie.color,
+        backgroundColor: serie.color,
+        borderWidth: 3,
+        tension: 0.3,
+        pointRadius: settings.showPoints ? 4 : 0,
+        pointHoverRadius: 5,
+    }));
+
+    // Gestrichelte Linie bei 0 % = "Stand 2018"
+    datasets.push({
+        label: 'Stand 2018',
+        data: settings.rows.map(() => 0),
+        borderColor: settings.textColor,
+        borderWidth: 1,
+        borderDash: [5, 5], // gestrichelt: 5 px Strich, 5 px Lücke
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        isBaseline: true,   // eigene Angabe: diese Linie nicht im Tooltip/in der Legende
+    });
+
+    // Endwert jeder Linie rechts daneben schreiben, z. B. "+10 %"
+    const labels = settings.series.map((serie, index) => ({
+        datasetIndex: index,
+        index: lastIndex,
+        text: formatPercent(datasets[index].data[lastIndex]),
+        position: 'right',
+        color: serie.labelColor ?? serie.color,
+    }));
+
+    return new Chart(document.getElementById(settings.canvasId), {
+        type: 'line',
+        data: {
+            labels: settings.rows.map(row => row.year),
+            datasets: datasets,
+        },
+        options: {
+            layout: { padding: { top: 10, right: 60 } }, // rechts Platz für "+117 %"
+            plugins: {
+                pointLabels: { labels: labels },
+                legend: {
+                    display: settings.showLegend,
+                    position: 'top',
+                    align: 'start',
+                    labels: {
+                        color: settings.textColor,
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                        // Die gestrichelte 0-Linie nicht in der Legende zeigen
+                        filter: (item, data) => !data.datasets[item.datasetIndex].isBaseline,
+                    },
+                },
+                tooltip: {
+                    // Die gestrichelte 0-Linie nicht im Tooltip zeigen
+                    filter: (item) => !item.dataset.isBaseline,
+                    callbacks: {
+                        // Prozent UND absolute Zahl, z. B. "Hunde im Heim: −40 % (1’288 Hunde)"
+                        label: (context) => {
+                            const percent = formatPercent(context.parsed.y);
+                            const absolute = formatNumber(context.dataset.absolute[context.dataIndex]);
+                            return `${context.dataset.label}: ${percent} (${absolute} ${context.dataset.unit})`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: settings.textColor, maxRotation: 0 },
+                },
+                y: {
+                    min: settings.y.min,
+                    max: settings.y.max,
+                    ticks: {
+                        stepSize: settings.y.stepSize,
+                        color: settings.textColor,
+                        // 0 heisst "Stand 2018", sonst Prozent mit Vorzeichen
+                        callback: (value) => value === 0 ? 'Stand 2018' : formatPercent(value),
+                    },
+                    grid: { color: settings.gridColor },
+                    border: { display: false },
+                },
+            },
+        },
+    });
+}
+
+// --- Funktion 4: "P2" – Hunde pro Tierheim als liegende Balken ----------------
+// rows: Dezember-Zeilen ab 2018
+function createProHeimChart(rows) {
+    // Hunde pro Heim = Hunde im Heim ÷ Anzahl Heime, gerundet
+    const values = rows.map(row => Math.round(row.total_dogs_shelter / row.animal_shelter));
+
+    return new Chart(document.getElementById('chart-pro-heim'), {
+        type: 'bar',
+        data: {
+            labels: rows.map(row => row.year),
+            datasets: [{
+                data: values,
+                backgroundColor: COLORS.peach,
+                borderRadius: 4,
+                barPercentage: 0.75, // Balken etwas schmaler als der Platz pro Jahr
+            }],
+        },
+        options: {
+            indexAxis: 'y', // Balken liegen (Jahre auf der y-Achse)
+            layout: { padding: { right: 36 } }, // Platz für die Zahl am Balkenende
+            // Tooltip, sobald die Maus auf der Höhe eines Balkens ist
+            interaction: { mode: 'index', axis: 'y', intersect: false },
+            plugins: {
+                // Zahl am Ende jedes Balkens
+                pointLabels: {
+                    labels: values.map((value, index) => ({ index: index, text: String(value), position: 'right' })),
+                },
+                tooltip: {
+                    callbacks: {
+                        // Ergebnis UND Rechnung, z. B. "51 Hunde pro Heim (2’156 Hunde ÷ 42 Heime)"
+                        label: (context) => {
+                            const row = rows[context.dataIndex];
+                            return `${context.parsed.x} Hunde pro Heim (${formatNumber(row.total_dogs_shelter)} Hunde ÷ ${row.animal_shelter} Heime)`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    display: false, // keine Achse unten: die Zahlen stehen an den Balken
+                    beginAtZero: true,
+                },
+                y: {
+                    grid: { display: false },
+                    border: { display: false },
                 },
             },
         },
@@ -359,10 +649,15 @@ try {
     const december = data.filter(row => row.month === 12);
     console.log('Dezember-Werte:', december.length, 'Jahre');
 
+    // Dezember-Zeilen ab dem Vergleichsjahr 2018 (für Prolog, P1 und P2)
+    const since2018 = december.filter(row => row.year >= 2018);
+
     // Die drei Jahre, die wir für die Kennzahlen brauchen
-    const first = december[0];                                // 2016
-    const base = december.find(row => row.year === 2018);    // Vergleichsjahr 2018
-    const last = december[december.length - 1];              // 2025
+    const first = december[0];                // 2016
+    const base = since2018[0];                // Vergleichsjahr 2018
+    const last = december[december.length - 1]; // 2025
+
+    // --- Kennzahlen (grosse Zahlen in den Grafik-Karten) ---
 
     // Hunde-Fieber: registrierte Hunde
     setText('kpi-land', formatNumber(last.registered_dogs));
@@ -386,8 +681,79 @@ try {
     setText('kpi-pro-heim-start', Math.round(base.total_dogs_shelter / base.animal_shelter));
     setText('kpi-pro-heim-end', Math.round(last.total_dogs_shelter / last.animal_shelter));
 
-    // Grafiken einrichten (gezeichnet werden sie erst, wenn sie ganz sichtbar sind)
-    setupChart('chart-heime', () => createHeimeChart(december));
+    // --- Grafiken einrichten (gezeichnet werden sie erst, wenn sie ganz sichtbar sind) ---
+
+    // Prolog: Tierheime und Hunde im Heim, Veränderung seit 2018 (helle Karte, dunkle Schrift)
+    setupChart('chart-prolog', () => createChangeChart({
+        canvasId: 'chart-prolog',
+        rows: since2018,
+        series: [
+            { label: 'Tierheime', key: 'animal_shelter', unit: 'Heime', color: COLORS.bordeaux },
+            { label: 'Hunde im Heim', key: 'total_dogs_shelter', unit: 'Hunde', color: COLORS.cream, labelColor: COLORS.bordeaux },
+        ],
+        showLegend: true,
+        showPoints: false,
+        textColor: COLORS.bordeaux,
+        gridColor: 'rgba(59, 15, 15, 0.15)',
+        y: { min: -50, max: 150, stepSize: 50 },
+    }));
+
+    // Hunde-Fieber: registrierte Hunde
+    const maxLandIndex = december.findIndex(row =>
+        row.registered_dogs === Math.max(...december.map(r => r.registered_dogs)));
+
+    setupChart('chart-hunde-land', () => createLineChart({
+        canvasId: 'chart-hunde-land',
+        labels: december.map(row => row.year),
+        values: december.map(row => row.registered_dogs),
+        unit: 'Hunde',
+        fillRgb: '243, 239, 231', // Creme
+        y: { min: 450000, max: 575000, stepSize: 25000 },
+        pointLabels: [
+            { index: 0, text: formatNumber(first.registered_dogs), position: 'belowRight' },
+            {
+                index: maxLandIndex,
+                text: `Höchststand ${december[maxLandIndex].year}: ${formatNumber(december[maxLandIndex].registered_dogs)}`,
+                position: 'aboveLeft',
+            },
+            { index: december.length - 1, text: formatNumber(last.registered_dogs), position: 'belowLeft' },
+        ],
+    }));
+
+    // Im Tierheim: alle Monate
+    setupChart('chart-tierheim', () => createShelterChart(data));
+
+    // P1: Hunde im Land und Hunde im Heim, Veränderung seit 2018
+    setupChart('chart-p1', () => createChangeChart({
+        canvasId: 'chart-p1',
+        rows: since2018,
+        series: [
+            { label: 'Hunde im Land', key: 'registered_dogs', unit: 'Hunde', color: COLORS.peach },
+            { label: 'Hunde im Heim', key: 'total_dogs_shelter', unit: 'Hunde', color: COLORS.cream },
+        ],
+        showLegend: false, // die Kennzahl-Pillen über der Grafik ersetzen die Legende
+        showPoints: true,
+        textColor: 'rgba(243, 239, 231, 0.75)',
+        gridColor: COLORS.grid,
+        y: { min: -50, max: 20, stepSize: 10 },
+    }));
+
+    // Die Karte: Anzahl Tierheime
+    setupChart('chart-heime', () => createLineChart({
+        canvasId: 'chart-heime',
+        labels: december.map(row => row.year),
+        values: december.map(row => row.animal_shelter),
+        unit: 'Tierheime',
+        fillRgb: '201, 89, 47', // Orange
+        y: { min: 0, max: 100, stepSize: 25 },
+        pointLabels: [
+            { index: 0, text: String(first.animal_shelter), position: 'belowRight' },
+            { index: december.length - 1, text: String(last.animal_shelter), position: 'above' },
+        ],
+    }));
+
+    // P2: Hunde pro Tierheim
+    setupChart('chart-pro-heim', () => createProHeimChart(since2018));
 } catch (error) {
     console.error('Daten konnten nicht geladen werden:', error);
 }
