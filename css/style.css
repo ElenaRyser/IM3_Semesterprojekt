@@ -175,23 +175,45 @@ a {
 }
 
 .nav a {
+    position: relative; /* liegt über der dunklen Pille */
+    z-index: 1;
     padding: 4px 9px;
     font-size: 0.9rem;
     color: var(--brown);
     text-decoration: none;
     border-radius: 999px;
     white-space: nowrap;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.3s;
 }
 
 .nav a:hover {
     background: rgba(122, 69, 48, 0.12);
 }
 
-/* Aktiver Abschnitt: dunkle Pille. Die Klasse setzt später script.js */
+/* Aktiver Abschnitt: helle Schrift (die dunkle Pille liegt dahinter).
+   Die Klasse .is-active setzt script.js */
 .nav a.is-active {
-    background: var(--bordeaux);
     color: var(--white);
+}
+
+.nav a.is-active:hover {
+    background: transparent;
+}
+
+/* Dunkle Pille: EIN Element, das hinter das aktive Kapitel gleitet.
+   Position und Breite setzt script.js, transition macht die Bewegung weich. */
+.nav-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--bordeaux);
+    border-radius: 999px;
+    opacity: 0; /* im Hero unsichtbar */
+    transition: transform 0.4s ease, width 0.4s ease, opacity 0.3s;
+}
+
+.nav-pill.is-visible {
+    opacity: 1;
 }
 
 /* Orangefarbenes Band ganz oben mit dem Logo */
@@ -647,6 +669,7 @@ p {
         right: 12px;
         overflow-x: auto;        /* zu breite Navigation lässt sich wischen */
         scrollbar-width: none;   /* Scrollbalken ausblenden */
+        scroll-behavior: smooth; /* automatisches Mitwischen läuft weich */
     }
 
     .site-header {

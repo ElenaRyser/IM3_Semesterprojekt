@@ -277,6 +277,74 @@ function createHeimeChart(december) {
 }
 
 // ============================================================================
+// NAVIGATION: zeigt immer an, in welchem Kapitel man gerade ist
+// ============================================================================
+
+const nav = document.querySelector('.nav');
+const navPill = document.querySelector('.nav-pill');
+const navLinks = document.querySelectorAll('.nav a');
+
+// Zu jedem Link den passenden Abschnitt suchen: href="#prolog" → <section id="prolog">
+const sections = [...navLinks].map(link => document.querySelector(link.getAttribute('href')));
+
+// Merkt sich das zuletzt aktive Kapitel (-1 = keines, z. B. im Hero)
+let lastActiveIndex = -1;
+
+function updateNav() {
+    // "Leselinie" bei 40 % der Fensterhöhe: Aktiv ist der letzte Abschnitt,
+    // dessen Anfang schon über diese Linie gescrollt wurde.
+    const readingLine = window.innerHeight * 0.4;
+    let activeIndex = -1;
+
+    sections.forEach((section, index) => {
+        if (section.getBoundingClientRect().top <= readingLine) {
+            activeIndex = index;
+        }
+    });
+
+    // Ganz unten angekommen: letztes Kapitel (Fazit) aktiv
+    const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+    if (atBottom) {
+        activeIndex = sections.length - 1;
+    }
+
+    // Helle Schrift beim aktiven Link, bei allen anderen nicht
+    navLinks.forEach((link, index) => {
+        link.classList.toggle('is-active', index === activeIndex);
+    });
+
+    // Im Hero (vor dem Prolog): Pille ausblenden
+    if (activeIndex === -1) {
+        navPill.classList.remove('is-visible');
+        lastActiveIndex = -1;
+        return;
+    }
+
+    // Pille genau hinter den aktiven Link schieben.
+    // offsetLeft/offsetWidth: Position und Breite des Links innerhalb der Navigation.
+    // Die Bewegung macht CSS weich (transition bei .nav-pill).
+    const activeLink = navLinks[activeIndex];
+    navPill.style.top = `${activeLink.offsetTop}px`;
+    navPill.style.height = `${activeLink.offsetHeight}px`;
+    navPill.style.width = `${activeLink.offsetWidth}px`;
+    navPill.style.transform = `translateX(${activeLink.offsetLeft}px)`;
+    navPill.classList.add('is-visible');
+
+    // Handy: Navigation so wischen, dass das aktive Kapitel in der Mitte sichtbar ist.
+    // Nur wenn das Kapitel wechselt – sonst würde man beim eigenen Wischen gestört.
+    // (Auf dem Desktop passt alles hinein, dann bewirkt das nichts.)
+    if (activeIndex !== lastActiveIndex) {
+        nav.scrollTo({ left: activeLink.offsetLeft - (nav.clientWidth - activeLink.offsetWidth) / 2 });
+        lastActiveIndex = activeIndex;
+    }
+}
+
+// Bei jedem Scrollen und bei Änderung der Fenstergrösse neu prüfen
+window.addEventListener('scroll', updateNav, { passive: true });
+window.addEventListener('resize', updateNav);
+updateNav(); // einmal beim Laden
+
+// ============================================================================
 // START
 // ============================================================================
 

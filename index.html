@@ -48,9 +48,11 @@
 
 <!-- ==========================================================================
      Navigation: bleibt beim Scrollen oben rechts stehen (position: fixed).
-     Den aktiven Abschnitt markiert später script.js mit der Klasse .is-active.
+     Den aktiven Abschnitt markiert script.js mit der Klasse .is-active.
      ========================================================================== -->
 <nav class="nav" aria-label="Kapitel">
+    <!-- Dunkle Pille hinter dem aktiven Kapitel: script.js schiebt sie an die richtige Stelle -->
+    <span class="nav-pill" aria-hidden="true"></span>
     <a href="#prolog">Prolog</a>
     <a href="#hunde-fieber">Hunde-Fieber</a>
     <a href="#im-tierheim">Im Tierheim</a>
