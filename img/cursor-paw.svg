@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+    <!-- Gleiche Pfote wie im Logo. Weisser Rand, damit sie auch auf dunklem Hintergrund sichtbar ist. -->
+    <g fill="#1a1a1a" stroke="#ffffff" stroke-width="1">
+        <ellipse cx="12" cy="16" rx="5.5" ry="4.5"/>
+        <ellipse cx="5" cy="10" rx="2.2" ry="2.8"/>
+        <ellipse cx="9.3" cy="5.5" rx="2.2" ry="2.8"/>
+        <ellipse cx="14.7" cy="5.5" rx="2.2" ry="2.8"/>
+        <ellipse cx="19" cy="10" rx="2.2" ry="2.8"/>
+    </g>
+</svg>

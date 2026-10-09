@@ -61,6 +61,17 @@ body {
     line-height: 1.5;
     color: var(--ink);
     background-color: var(--cream);
+
+    /* Mauszeiger = Hundepfote aus dem Logo.
+       16 16 = der "Klickpunkt" liegt in der Mitte des 32×32-Bildes.
+       auto = normaler Zeiger, falls das Bild nicht lädt. */
+    cursor: url("../img/cursor-paw.svg") 16 16, auto;
+}
+
+/* Links und Buttons zeigen sonst die Hand – hier auch die Pfote */
+a,
+button {
+    cursor: url("../img/cursor-paw.svg") 16 16, pointer;
 }
 
 img {
@@ -474,7 +485,6 @@ p {
     background: transparent;
     border: 1px solid currentColor;
     border-radius: 999px;
-    cursor: pointer;
 }
 
 .replay:hover {
