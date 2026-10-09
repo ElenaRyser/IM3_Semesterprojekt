@@ -109,6 +109,12 @@ a {
     align-items: start;
 }
 
+/* Spalten dürfen schmaler werden als ihr Inhalt.
+   Sonst macht ein Diagramm (Canvas) die Spalte auf dem Handy breiter als den Bildschirm. */
+.split > * {
+    min-width: 0;
+}
+
 
 /* --------------------------------------------------------------------------
    4. Abschnitte

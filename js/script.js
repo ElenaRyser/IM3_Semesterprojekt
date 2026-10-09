@@ -5,6 +5,7 @@
  * Schritt 2: Dezember-Werte herausfiltern (eine Zeile pro Jahr).
  * Schritt 3: Kennzahlen (grosse Zahlen in den Grafik-Karten) einsetzen.
  * Schritt 4: Hundebilder in die Polaroids und die Bildkarte einsetzen.
+ * Grafiken: mit Chart.js, eine Funktion pro Grafik.
  */
 
 // Adresse unseres Endpunkts.
@@ -49,7 +50,237 @@ function setText(id, text) {
     document.getElementById(id).textContent = text;
 }
 
-// Startpunkt: Daten holen und zum Testen in der Konsole ausgeben.
+// ============================================================================
+// GRAFIKEN (Chart.js)
+// ============================================================================
+
+// Farben der Grafiken (dieselben wie in style.css)
+const COLORS = {
+    cream: '#f3efe7',
+    bordeaux: '#3b0f0f',
+    orange: '#c9592f',
+    grid: 'rgba(243, 239, 231, 0.12)', // feine Hilfslinien
+};
+
+// Grundeinstellungen für ALLE Grafiken.
+// So müssen wir das nicht bei jeder Grafik einzeln angeben.
+Chart.defaults.font.family = 'Roboto, sans-serif';
+Chart.defaults.color = 'rgba(243, 239, 231, 0.75)'; // Achsenbeschriftung: helles Creme
+Chart.defaults.maintainAspectRatio = false;          // Höhe kommt aus dem CSS (.chart-box)
+
+// Tooltip (erscheint beim Darüberfahren): helles Kästchen mit dunkler Schrift
+Chart.defaults.plugins.tooltip.backgroundColor = COLORS.cream;
+Chart.defaults.plugins.tooltip.titleColor = COLORS.bordeaux;
+Chart.defaults.plugins.tooltip.bodyColor = COLORS.bordeaux;
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.displayColors = false; // kein farbiges Kästchen vor dem Text
+
+// --- Bausteine, die mehrere Grafiken verwenden können -----------------------
+
+// Dauer der Animation "von links nach rechts zeichnen" in Millisekunden
+const REVEAL_DURATION = 2000;
+
+// Plugin: deckt die Grafik gleichmässig von links nach rechts auf –
+// wie ein Vorhang, der zur Seite gezogen wird. So sieht es aus,
+// als würde die Linie gezeichnet.
+// Funktionsweise: Vor dem Zeichnen der Linie legen wir eine "Schablone" (clip)
+// über die Grafik. Nur was links vom Vorhang liegt, wird sichtbar.
+// Bei jedem Bild (Frame) rückt der Vorhang ein Stück nach rechts.
+const revealFromLeft = {
+    id: 'revealFromLeft',
+
+    // Wird einmal aufgerufen, wenn die Grafik erstellt wird: Animation starten
+    afterInit(chart) {
+        chart.$reveal = 0; // 0 = nichts sichtbar, 1 = alles sichtbar
+        const start = performance.now();
+
+        // requestAnimationFrame ruft die Funktion beim nächsten Bild des Bildschirms auf
+        // (ca. 60-mal pro Sekunde) – dadurch läuft die Bewegung flüssig.
+        const frame = (now) => {
+            if (chart.$destroyed) {
+                return; // Grafik wurde inzwischen gelöscht (z. B. "Nochmals abspielen")
+            }
+            // Wie weit sind wir? Gleichmässig von 0 bis 1 (linear)
+            chart.$reveal = Math.min((now - start) / REVEAL_DURATION, 1);
+            chart.draw();
+
+            if (chart.$reveal < 1) {
+                requestAnimationFrame(frame);
+            }
+        };
+        requestAnimationFrame(frame);
+    },
+
+    // Vor dem Zeichnen der Linie: Schablone bis zur aktuellen Vorhang-Position
+    beforeDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+        // 10 px Zugabe links und rechts, damit die runden Punkte am Rand ganz sichtbar sind
+        const left = chartArea.left - 10;
+        const width = (chartArea.width + 20) * chart.$reveal;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(left, 0, width, chart.height);
+        ctx.clip();
+    },
+
+    // Nach dem Zeichnen der Linie: Schablone wieder wegnehmen
+    afterDatasetsDraw(chart) {
+        chart.ctx.restore();
+    },
+
+    // Grafik wird gelöscht: Animation stoppen
+    afterDestroy(chart) {
+        chart.$destroyed = true;
+    },
+};
+
+// Fläche unter der Linie: Farbverlauf von Orange (oben) zu durchsichtig (unten)
+function gradientFill(context) {
+    const { ctx, chartArea } = context.chart;
+
+    // Beim allerersten Zeichnen ist die Grösse der Grafik noch nicht bekannt
+    if (!chartArea) {
+        return null;
+    }
+
+    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    gradient.addColorStop(0, 'rgba(201, 89, 47, 0.7)');
+    gradient.addColorStop(1, 'rgba(201, 89, 47, 0)');
+    return gradient;
+}
+
+// Plugin: schreibt den ersten und den letzten Wert direkt an die Linie (wie im Figma).
+// Chart.js ruft afterDatasetsDraw jedes Mal auf, nachdem die Linie gezeichnet wurde.
+const endLabels = {
+    id: 'endLabels',
+    afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        const points = chart.getDatasetMeta(0).data;
+        const values = chart.data.datasets[0].data;
+        const lastIndex = points.length - 1;
+
+        ctx.save();
+        ctx.font = 'bold 14px Roboto, sans-serif';
+        ctx.fillStyle = COLORS.cream;
+
+        for (const index of [0, lastIndex]) {
+            // Position des Punkts auf dem Canvas
+            const { x, y } = points[index];
+            const text = formatNumber(values[index]);
+
+            if (index === 0) {
+                ctx.textAlign = 'left';
+                ctx.fillText(text, x + 10, y + 20); // erster Wert: rechts unterhalb
+            } else {
+                ctx.textAlign = 'center';
+                ctx.fillText(text, x, y - 14);      // letzter Wert: oberhalb
+            }
+        }
+
+        ctx.restore();
+    },
+};
+
+// Zeichnet eine Grafik (neu). Gibt es auf dem Canvas schon eine,
+// wird sie zuerst gelöscht – so startet die Animation wieder von vorne.
+function drawChart(canvasId, createChart) {
+    Chart.getChart(canvasId)?.destroy();
+    createChart();
+}
+
+// Richtet eine Grafik ein:
+// 1. Sie wird erst gezeichnet, wenn sie komplett im Bild ist (Animation nur beim ersten Mal).
+// 2. Der Button "Nochmals abspielen" zeichnet sie neu.
+// canvasId:    id des <canvas>, z. B. 'chart-heime'
+// createChart: Funktion, die die Grafik erstellt
+function setupChart(canvasId, createChart) {
+    // Wir beobachten den Rahmen um das Canvas (.chart-box), nicht das Canvas selbst:
+    // Ein leeres Canvas ist 300 px breit und auf dem Handy breiter als der Bildschirm,
+    // dann wäre es nie "ganz sichtbar".
+    const box = document.getElementById(canvasId).parentElement;
+
+    // Der IntersectionObserver meldet, wie viel vom Element sichtbar ist.
+    // threshold 0.99 = "fast 100 %" (ganz genau 1 wird wegen Rundung manchmal nie erreicht)
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].intersectionRatio >= 0.99) {
+            drawChart(canvasId, createChart);
+            observer.disconnect(); // nicht mehr beobachten: Animation nur beim ersten Mal
+        }
+    }, { threshold: 0.99 });
+
+    observer.observe(box);
+
+    // Button "Nochmals abspielen": gehört über data-chart="…" zu diesem Canvas
+    const replayButton = document.querySelector(`.replay[data-chart="${canvasId}"]`);
+    replayButton.addEventListener('click', () => drawChart(canvasId, createChart));
+}
+
+// --- Die einzelnen Grafiken -------------------------------------------------
+
+// Grafik "Die Karte": Anzahl Tierheime, Stand Dezember 2016–2025
+function createHeimeChart(december) {
+    return new Chart(document.getElementById('chart-heime'), {
+        type: 'line',
+        data: {
+            // x-Achse: die Jahre
+            labels: december.map(row => row.year),
+            datasets: [{
+                label: 'Tierheime',
+                // y-Werte: Anzahl Tierheime pro Jahr
+                data: december.map(row => row.animal_shelter),
+                borderColor: COLORS.cream,         // Linie: Creme
+                borderWidth: 3,
+                backgroundColor: gradientFill,     // Fläche: Farbverlauf
+                fill: true,                        // Fläche unter der Linie füllen
+                pointBackgroundColor: COLORS.bordeaux, // Punkte: innen Bordeaux …
+                pointBorderColor: COLORS.cream,        // … mit Creme-Rand
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }],
+        },
+        // Plugins: Beschriftung "11" und "91" an der Linie, Aufdecken von links nach rechts.
+        // Reihenfolge wichtig: endLabels zuerst, damit auch die Beschriftung
+        // erst erscheint, wenn der "Vorhang" sie erreicht.
+        plugins: [endLabels, revealFromLeft],
+        options: {
+            animation: false, // Chart.js-eigene Animation aus – wir animieren mit revealFromLeft
+            // Platz oben und rechts, damit die Beschriftung "91" nicht abgeschnitten wird
+            layout: { padding: { top: 24, right: 12 } },
+            // Tooltip erscheint, sobald die Maus in der Nähe eines Jahres ist
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false }, // nur eine Linie, Legende unnötig
+                tooltip: {
+                    callbacks: {
+                        // Text im Tooltip, z. B. "91 Tierheime"
+                        label: (context) => `${formatNumber(context.parsed.y)} Tierheime`,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid: { display: false }, // keine senkrechten Linien
+                    ticks: { maxRotation: 0 }, // Jahre nie schräg stellen (auf dem Handy werden einige ausgelassen)
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: { stepSize: 25 },
+                    grid: { color: COLORS.grid },
+                    border: { display: false }, // keine senkrechte Achsenlinie
+                },
+            },
+        },
+    });
+}
+
+// ============================================================================
+// START
+// ============================================================================
+
+// Daten holen, Kennzahlen einsetzen, Grafiken einrichten.
 // try/catch: Geht etwas schief, steht die Fehlermeldung in der Konsole.
 try {
     const data = await loadData(ENDPUNKT);
@@ -86,6 +317,9 @@ try {
     // P2: Hunde pro Heim = Hunde im Heim geteilt durch Anzahl Heime
     setText('kpi-pro-heim-start', Math.round(base.total_dogs_shelter / base.animal_shelter));
     setText('kpi-pro-heim-end', Math.round(last.total_dogs_shelter / last.animal_shelter));
+
+    // Grafiken einrichten (gezeichnet werden sie erst, wenn sie ganz sichtbar sind)
+    setupChart('chart-heime', () => createHeimeChart(december));
 } catch (error) {
     console.error('Daten konnten nicht geladen werden:', error);
 }
