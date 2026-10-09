@@ -1,0 +1,656 @@
+/* ==========================================================================
+   Spurensuche – Stylesheet
+
+   Inhalt:
+   1. Farben und Schriften (Variablen)
+   2. Grundlagen
+   3. Layout-Hilfen (container, split)
+   4. Abschnitte: helle und dunkle Hintergründe mit Karomuster
+   5. Navigation und Kopfzeile
+   6. Typografie
+   7. Hero und Polaroids
+   8. Grafik-Karten
+   9. Kleine Karten (Frage, Vergleich, Listen)
+   10. Mobile
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Farben und Schriften
+   Alle Farben stehen hier an einem Ort. Will man eine Farbe ändern,
+   ändert man sie nur hier, und sie ändert sich auf der ganzen Seite.
+   -------------------------------------------------------------------------- */
+:root {
+    --cream: #f3efe7;        /* heller Hintergrund */
+    --tan: #d08a66;          /* Kopfzeile, Infokarten */
+    --orange: #c9592f;       /* Button, Akzent */
+    --orange-light: #f2b48a; /* Akzent auf dunklem Grund */
+    --brown: #7a4530;        /* brauner Abschnitt */
+    --bordeaux: #3b0f0f;     /* dunkelster Abschnitt */
+    --ink: #1a1a1a;          /* Textfarbe auf hell */
+    --white: #ffffff;
+
+    /* Linien des Karomusters: rötlich und halb durchsichtig */
+    --grid-light: rgba(214, 110, 110, 0.22);
+    --grid-dark: rgba(214, 90, 70, 0.16);
+    --grid-size: 40px;
+
+    /* Schriften (--font-title, --font-text) stehen in fonts.css */
+
+    --radius: 28px;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Grundlagen
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* Breite inkl. Padding rechnen, das macht Layouts einfacher */
+}
+
+html {
+    scroll-behavior: smooth; /* Klick in der Navigation scrollt weich statt zu springen */
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ink);
+    background-color: var(--cream);
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Layout-Hilfen
+   -------------------------------------------------------------------------- */
+
+/* Begrenzt die Breite des Inhalts und setzt seitlich Abstand */
+.container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.container--narrow {
+    max-width: 820px;
+}
+
+/* Zwei Spalten nebeneinander: links Text, rechts Grafik.
+   Auf dem Handy werden sie untereinander gestellt (siehe 10. Mobile). */
+.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Abschnitte
+   Jeder Abschnitt hat einen Hintergrund mit Karomuster. Das Muster entsteht
+   aus zwei Verläufen: einer zeichnet waagrechte, einer senkrechte Linien.
+   -------------------------------------------------------------------------- */
+.section {
+    padding: 120px 0 96px;      /* oben mehr Platz, damit die Navigation nichts verdeckt */
+    overflow-x: clip;           /* schräge Polaroids dürfen nicht seitlich aus der Seite ragen */
+    background-size: var(--grid-size) var(--grid-size);
+}
+
+.section--light {
+    background-color: var(--cream);
+    background-image:
+        linear-gradient(var(--grid-light) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-light) 1px, transparent 1px);
+}
+
+/* Dunkle Abschnitte: gleiche Linien, aber heller Text */
+.section--bordeaux,
+.section--brown {
+    color: var(--cream);
+    background-image:
+        linear-gradient(var(--grid-dark) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-dark) 1px, transparent 1px);
+}
+
+.section--bordeaux {
+    background-color: var(--bordeaux);
+}
+
+.section--brown {
+    background-color: var(--brown);
+}
+
+.section--center {
+    text-align: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Navigation und Kopfzeile
+   -------------------------------------------------------------------------- */
+
+/* Die Navigation bleibt immer oben rechts stehen */
+.nav {
+    position: fixed;
+    top: 24px;
+    right: 40px;
+    z-index: 10;
+    display: flex;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--cream);
+    border-radius: 999px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.nav a {
+    padding: 4px 9px;
+    font-size: 0.9rem;
+    color: var(--brown);
+    text-decoration: none;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav a:hover {
+    background: rgba(122, 69, 48, 0.12);
+}
+
+/* Aktiver Abschnitt: dunkle Pille. Die Klasse setzt später script.js */
+.nav a.is-active {
+    background: var(--bordeaux);
+    color: var(--white);
+}
+
+/* Orangefarbenes Band ganz oben mit dem Logo */
+.site-header {
+    background: var(--tan);
+    padding: 28px 0;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+/* Pfoten-Symbol: übernimmt die Textfarbe (currentColor) */
+.icon {
+    width: 1.1em;
+    height: 1.1em;
+    fill: currentColor;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Typografie
+   clamp(min, bevorzugt, max): Die Schrift wächst mit der Fensterbreite,
+   wird aber nie kleiner als min und nie grösser als max.
+   -------------------------------------------------------------------------- */
+h1,
+h2,
+h3 {
+    font-family: var(--font-title);
+    font-weight: 400; /* Fredoka One ist schon fett, sonst macht der Browser sie künstlich noch fetter */
+    line-height: 1.1;
+    margin: 0 0 32px;
+}
+
+h1 {
+    font-size: clamp(2.75rem, 6vw, 4.25rem);
+}
+
+h2 {
+    font-size: clamp(2.1rem, 4.5vw, 3.25rem);
+}
+
+p {
+    margin: 0 0 16px;
+    max-width: 34em; /* lange Zeilen sind schwer lesbar */
+}
+
+.section--center p {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Kleiner Titel über der Überschrift, z. B. "PROLOG" */
+.kicker {
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--brown);
+}
+
+.section--bordeaux .kicker,
+.section--brown .kicker {
+    color: var(--cream);
+}
+
+.kicker--accent,
+.section--brown .kicker--accent {
+    color: var(--orange-light);
+}
+
+/* Grosse Aussage, z. B. "Die Realität ist viel komplexer …" */
+.statement {
+    margin-top: 64px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.25;
+    max-width: 22em;
+}
+
+.statement--small {
+    margin-top: 24px;
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+}
+
+.small {
+    font-size: 0.85rem;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Hero und Polaroids
+   -------------------------------------------------------------------------- */
+.hero {
+    padding-top: 32px;
+}
+
+.hero-kicker {
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.hero-lead {
+    margin-top: 32px;
+    max-width: 26em;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 32px;
+}
+
+.button {
+    display: inline-flex;
+    gap: 8px;
+    padding: 16px 34px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--white);
+    text-decoration: none;
+    background: var(--orange);
+    border-radius: 999px;
+    transition: transform 0.2s;
+}
+
+.button:hover {
+    transform: translateY(2px);
+}
+
+/* Polaroid-Stapel: drei Fotos liegen übereinander (position: absolute)
+   und werden unterschiedlich gedreht. */
+.polaroids {
+    position: relative;
+    width: 100%;        /* nötig, weil die Fotos darin absolut liegen und sonst keine Breite geben */
+    height: 380px;
+    max-width: 440px;
+    margin: 40px auto 0;
+}
+
+.polaroid {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 62%;
+    margin: 0;
+    padding: 12px 12px 64px; /* unten mehr Rand wie bei einem echten Polaroid */
+    background: var(--white);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Bildrahmen: hält die Form (quadratisch), auch solange noch kein Bild
+   geladen ist. Das Bild liegt darin und füllt die ganze Fläche. */
+.photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #d9d2c5; /* Platzhalter-Farbe */
+}
+
+.photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Bild füllt die Fläche, ohne verzerrt zu werden */
+}
+
+/* Ohne Bildadresse (src) noch nichts anzeigen, sonst erscheint ein kaputtes Bild-Symbol */
+.photo img:not([src]) {
+    visibility: hidden;
+}
+
+.polaroid--left {
+    transform: translateX(-95%) rotate(-12deg);
+    top: 40px;
+}
+
+.polaroid--right {
+    transform: translateX(-5%) rotate(10deg);
+    top: 40px;
+}
+
+.polaroid--center {
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* Klebestreifen oben auf dem mittleren Foto */
+.polaroid--center::before {
+    content: "";
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    width: 90px;
+    height: 32px;
+    background: rgba(255, 246, 196, 0.9);
+    transform: translateX(-50%);
+}
+
+.polaroid-paw {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    width: 26px;
+    height: 26px;
+    color: var(--ink);
+    transform: translateX(-50%);
+}
+
+
+/* --------------------------------------------------------------------------
+   8. Grafik-Karten
+   -------------------------------------------------------------------------- */
+.chart-card {
+    margin: 0 0 24px;
+    padding: 28px 32px 24px;
+    border-radius: var(--radius);
+    color: var(--cream);
+    text-align: left;
+}
+
+.chart-card--tan      { background: var(--tan); color: var(--bordeaux); }
+.chart-card--orange   { background: #b9563a; }
+.chart-card--brown    { background: var(--brown); }
+.chart-card--bordeaux { background: var(--bordeaux); }
+.chart-card--plain    { background: rgba(0, 0, 0, 0.06); }
+
+/* Auf braunem Abschnitt braucht die braune Karte etwas Kontrast */
+.section--bordeaux .chart-card--brown {
+    background: #6e3d2a;
+}
+
+.chart-label {
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+}
+
+.chart-number {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 0 12px;
+    font-family: var(--font-title);
+    font-size: clamp(2.75rem, 6vw, 4rem);
+    line-height: 1;
+}
+
+.chart-number-note {
+    font-family: var(--font-text);
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--orange-light);
+}
+
+/* P2: zwei Zahlen nebeneinander (2018 und 2025) */
+.chart-number-pair {
+    display: flex;
+    gap: 24px;
+}
+
+.chart-number-pair p {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.chart-number-year {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* Chart.js braucht einen Behälter mit fester Höhe und position: relative,
+   damit das Diagramm sich richtig an die Grösse anpasst. */
+.chart-box {
+    position: relative;
+    height: 320px;
+    margin: 12px 0 16px;
+}
+
+.replay {
+    padding: 6px 16px;
+    font: inherit;
+    font-size: 0.85rem;
+    color: inherit;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.replay:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.chart-source {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+/* P1: die zwei Kennzahl-Pillen über dem Diagramm */
+.kpi-pills {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.kpi-pill {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 12px 32px 12px 24px;
+    font-size: 0.85rem;
+    border-radius: 40px;
+}
+
+.kpi-pill-value {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    line-height: 1.1;
+}
+
+.kpi-pill--orange { background: var(--orange); color: var(--white); }
+.kpi-pill--cream  { background: var(--cream); color: var(--ink); }
+
+
+/* --------------------------------------------------------------------------
+   9. Kleine Karten
+   -------------------------------------------------------------------------- */
+
+/* Hundebild im Abschnitt Hunde-Fieber */
+.photo-card {
+    margin: 40px 0 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--bordeaux);
+}
+
+.photo-card .photo {
+    aspect-ratio: 16 / 9;
+    background: transparent;
+}
+
+/* "Die zentrale Frage" */
+.info-card {
+    margin-top: 40px;
+    padding: 24px 40px;
+    background: var(--tan);
+    border-radius: var(--radius);
+}
+
+.info-card-label {
+    margin-bottom: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--brown);
+}
+
+.info-card-text {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
+/* "2016 → 2025" bei Die Karte: ein kleines Raster mit 3 Spalten.
+   Oben die Jahre, unten Zahl – Pfeil – Zahl. */
+.compare-card {
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 24px;
+    align-items: center;
+    margin-top: 32px;
+    padding: 16px 40px 20px;
+    background: var(--tan);
+    border-radius: var(--radius);
+}
+
+.compare-year:first-child { grid-column: 1; }
+.compare-year:nth-child(2) { grid-column: 3; }
+
+.compare-year {
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.compare-value {
+    font-size: 2.75rem;
+    line-height: 1.1;
+}
+
+.compare-arrow {
+    font-size: 2rem;
+}
+
+/* Fazit: helle Karten mit Listen */
+.list-card {
+    margin-top: 40px;
+    padding: 24px 32px;
+    color: var(--orange);
+    background: var(--cream);
+    border-radius: var(--radius);
+}
+
+.list-card h3 {
+    margin-bottom: 12px;
+    font-family: var(--font-text);
+    font-size: 1.35rem;
+    font-weight: 500;
+}
+
+.list-card ul {
+    margin: 0;
+    padding-left: 20px;
+    font-weight: 700;
+}
+
+.site-footer {
+    padding: 32px 0;
+    color: var(--cream);
+    background: var(--bordeaux);
+}
+
+
+/* --------------------------------------------------------------------------
+   10. Mobile
+   Unter 860 px Breite: Spalten untereinander, Navigation scrollt seitlich.
+   -------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+    .split {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .section {
+        padding: 96px 0 64px;
+    }
+
+    .nav {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        overflow-x: auto;        /* zu breite Navigation lässt sich wischen */
+        scrollbar-width: none;   /* Scrollbalken ausblenden */
+    }
+
+    .site-header {
+        padding-top: 72px;       /* Platz für die Navigation */
+    }
+
+    .chart-card {
+        padding: 20px;
+    }
+
+    .chart-box {
+        height: 260px;
+    }
+
+    .kpi-pills {
+        flex-wrap: wrap;
+    }
+
+    .polaroids {
+        height: 300px;
+        max-width: 340px;
+    }
+}

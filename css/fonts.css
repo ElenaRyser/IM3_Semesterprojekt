@@ -1,0 +1,16 @@
+/* ==========================================================================
+   Schriften
+
+   Titel:      Fredoka One (gibt es nur in einer Stärke, schon fett)
+   Fliesstext: Roboto (normal 400, mittel 500, fett 700)
+
+   Die Schriften kommen von Google Fonts. In style.css verwenden wir sie
+   nur über die zwei Variablen unten.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:wght@400;500;700&display=swap");
+
+:root {
+    --font-title: "Fredoka One", sans-serif;
+    --font-text: "Roboto", sans-serif;
+}

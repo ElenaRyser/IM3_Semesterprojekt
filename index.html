@@ -1,10 +1,380 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
+
+<!--
+  Spurensuche – Das Paradoxon der Schweizer Tierheime (IM3 Semesterprojekt)
+
+  Aufbau der Seite (gleiche Reihenfolge wie im Figma):
+    Hero → Prolog → Hunde-Fieber → Im Tierheim → P1 → Die Karte → P2 → Fazit
+
+  Die Zahlen in den Grafik-Karten (z. B. 1'288) stehen hier als Startwert.
+  Sobald script.js die Daten von php/unload.php geladen hat, überschreibt es
+  sie mit den echten Werten aus der Datenbank. Darum hat jede Zahl eine id.
+-->
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spurensuche – Das Paradoxon der Schweizer Tierheime</title>
+    <meta name="description"
+          content="Eine datengetriebene Spurensuche 2016–2025: Immer weniger Hunde leben im Tierheim, trotzdem gibt es immer mehr Tierheime.">
+
+    <!-- Zuerst die Schriften, danach das Layout (style.css braucht die Schrift-Variablen) -->
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <h1>IM3 Semesterprojekt</h1>
+
+<!-- ==========================================================================
+     Pfoten-Symbol: einmal definiert, danach überall mit <use href="#paw"> wiederverwendet
+     ========================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="paw" viewBox="0 0 24 24">
+        <ellipse cx="12" cy="16" rx="5.5" ry="4.5"/>
+        <ellipse cx="5" cy="10" rx="2.2" ry="2.8"/>
+        <ellipse cx="9.3" cy="5.5" rx="2.2" ry="2.8"/>
+        <ellipse cx="14.7" cy="5.5" rx="2.2" ry="2.8"/>
+        <ellipse cx="19" cy="10" rx="2.2" ry="2.8"/>
+    </symbol>
+</svg>
+
+<!-- ==========================================================================
+     Navigation: bleibt beim Scrollen oben rechts stehen (position: fixed).
+     Den aktiven Abschnitt markiert später script.js mit der Klasse .is-active.
+     ========================================================================== -->
+<nav class="nav" aria-label="Kapitel">
+    <a href="#prolog">Prolog</a>
+    <a href="#hunde-fieber">Hunde-Fieber</a>
+    <a href="#im-tierheim">Im Tierheim</a>
+    <a href="#p1">P1</a>
+    <a href="#karte">Die Karte</a>
+    <a href="#p2">P2</a>
+    <a href="#fazit">Fazit</a>
+</nav>
+
+<!-- ==========================================================================
+     HERO
+     ========================================================================== -->
+<header class="site-header">
+    <div class="container">
+        <a class="logo" href="#top">
+            <svg class="icon"><use href="#paw"/></svg>
+            Spurensuche
+        </a>
+    </div>
+</header>
+
+<section class="section section--light hero" id="top">
+    <div class="container split">
+        <div>
+            <p class="hero-kicker">Eine datengetriebene Spurensuche 2016 – 2025</p>
+            <h1>Das Paradoxon der Schweizer Tierheime</h1>
+            <p class="hero-lead">
+                Immer weniger Hunde leben im Tierheim. Trotzdem gibt es immer
+                mehr Tierheime. Wie passt das zusammen?
+            </p>
+            <div class="hero-actions">
+                <a class="button" href="#prolog">Folge der Spur <span aria-hidden="true">↓</span></a>
+                <span class="small">Lesezeit ca. 6 Minuten</span>
+            </div>
+        </div>
+
+        <!-- Polaroid-Stapel: die Bilder setzt script.js aus der Dog-CEO-API ein -->
+        <div class="polaroids" aria-hidden="true">
+            <figure class="polaroid polaroid--left"><div class="photo"><img class="dog-image" alt=""></div></figure>
+            <figure class="polaroid polaroid--right"><div class="photo"><img class="dog-image" alt=""></div></figure>
+            <figure class="polaroid polaroid--center">
+                <div class="photo"><img class="dog-image" alt=""></div>
+                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<main>
+
+    <!-- ======================================================================
+         PROLOG
+         ====================================================================== -->
+    <section class="section section--bordeaux" id="prolog">
+        <div class="container split">
+            <div>
+                <p class="kicker">Prolog</p>
+                <h2>Der Mythos vom überfüllten Zwinger</h2>
+                <p>
+                    Wenn wir an den Tierschutz denken, haben wir ein Bild vor Augen:
+                    überfüllte Tierheime, gestresste Mitarbeitende und endlose
+                    Wartelisten für Hunde, die ein neues Zuhause suchen.
+                </p>
+                <p>
+                    In einem boomenden «Hundeland Schweiz» müsste der Druck auf die
+                    Institutionen schliesslich steigen.
+                </p>
+            </div>
+
+            <div>
+                <p class="kicker">Das Bild im Kopf</p>
+                <figure class="chart-card chart-card--tan">
+                    <p class="chart-label">Veränderung seit 2018</p>
+                    <div class="chart-box">
+                        <canvas id="chart-prolog" role="img"
+                                aria-label="Liniendiagramm: Seit 2018 steigt die Zahl der Tierheime um 117 Prozent, die Zahl der Hunde im Heim sinkt um 40 Prozent."></canvas>
+                    </div>
+                    <button class="replay" type="button" data-chart="chart-prolog">Nochmals abspielen</button>
+                </figure>
+                <p>
+                    Doch als wir die offiziellen Open-Data-Zahlen der Identitas AG
+                    auswerteten, liess sich diese Theorie nicht bestätigen.
+                </p>
+            </div>
+        </div>
+
+        <div class="container">
+            <p class="statement">
+                Die Realität ist viel komplexer – und erzählt eine ganz andere Geschichte.
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         HUNDE-FIEBER
+         ====================================================================== -->
+    <section class="section section--light" id="hunde-fieber">
+        <div class="container split">
+            <div>
+                <p class="kicker">Hunde-Fieber</p>
+                <h2>Die Schweiz im Hunde-Fieber</h2>
+                <p>
+                    Bevor wir in die Heime blicken, schauen wir nach draussen. Die Zahl
+                    der registrierten Hunde ist seit 2018 um rund 10 Prozent gewachsen,
+                    am stärksten in den Corona-Jahren.
+                </p>
+                <p>
+                    Seit 2023 flacht die Kurve ab. Ein Rückgang ist es noch kaum, aber
+                    der Boom ist vorbei.
+                </p>
+                <figure class="photo-card">
+                    <div class="photo"><img class="dog-image" alt="Zufälliges Hundebild aus der Dog CEO API"></div>
+                </figure>
+            </div>
+
+            <div>
+                <figure class="chart-card chart-card--orange">
+                    <p class="chart-label">Registrierte Hunde in der Schweiz, Stand Dezember</p>
+                    <p class="chart-number">
+                        <span id="kpi-land">552'538</span>
+                        <span class="chart-number-note" id="kpi-land-date">Dezember 2025</span>
+                    </p>
+                    <div class="chart-box">
+                        <canvas id="chart-hunde-land" role="img"
+                                aria-label="Liniendiagramm der registrierten Hunde in der Schweiz von 2016 bis 2025."></canvas>
+                    </div>
+                    <button class="replay" type="button" data-chart="chart-hunde-land">Nochmals abspielen</button>
+                    <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Stand jeweils Dezember.</figcaption>
+                </figure>
+                <p class="statement statement--small">
+                    Der Boom ist echt: plus 10 % seit 2018, am stärksten in den
+                    Corona-Jahren. Seit 2023 flacht er ab.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         IM TIERHEIM
+         ====================================================================== -->
+    <section class="section section--light" id="im-tierheim">
+        <div class="container split">
+            <div>
+                <p class="kicker">Im Tierheim</p>
+                <h2>Die Welle, die nie kam</h2>
+                <p>
+                    Mehr Hunde im Land müssten auch mehr Notfälle bedeuten. Nach der
+                    Pandemie wurde mit vollen Heimen gerechnet.
+                </p>
+                <p>
+                    Passiert ist das Gegenteil: Seit dem Höchststand Ende 2017 sinkt die
+                    Zahl der Heimhunde fast ununterbrochen.
+                </p>
+                <aside class="info-card">
+                    <p class="info-card-label">Die zentrale Frage</p>
+                    <p class="info-card-text">
+                        Warum sinkt die Zahl der Heimhunde, obwohl im Land mehr Hunde leben?
+                    </p>
+                </aside>
+            </div>
+
+            <figure class="chart-card chart-card--brown">
+                <p class="chart-label">Hunde in Schweizer Tierheimen</p>
+                <p class="chart-number">
+                    <span id="kpi-heim">1'288</span>
+                    <span class="chart-number-note" id="kpi-heim-date">Dezember 2025</span>
+                </p>
+                <div class="chart-box">
+                    <canvas id="chart-tierheim" role="img"
+                            aria-label="Flächendiagramm der Hunde in Schweizer Tierheimen pro Monat von 2016 bis 2025, mit Höchststand Ende 2017."></canvas>
+                </div>
+                <button class="replay" type="button" data-chart="chart-tierheim">Nochmals abspielen</button>
+                <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Monatswerte.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         PARADOXON TEIL 1
+         ====================================================================== -->
+    <section class="section section--brown section--center" id="p1">
+        <div class="container container--narrow">
+            <p class="kicker kicker--accent">Das Paradoxon Teil 1</p>
+            <h2>Draussen mehr Hunde. Drinnen weniger.</h2>
+
+            <figure class="chart-card chart-card--plain">
+                <p class="chart-label">Veränderung seit 2018, Stand jeweils Dezember</p>
+                <div class="kpi-pills">
+                    <p class="kpi-pill kpi-pill--orange">
+                        <span class="kpi-pill-value" id="kpi-p1-land">+10 %</span>
+                        Hunde im Land
+                    </p>
+                    <p class="kpi-pill kpi-pill--cream">
+                        <span class="kpi-pill-value" id="kpi-p1-heim">−40 %</span>
+                        Hunde im Heim
+                    </p>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chart-p1" role="img"
+                            aria-label="Liniendiagramm: Hunde im Land plus 10 Prozent, Hunde im Heim minus 40 Prozent seit 2018."></canvas>
+                </div>
+                <button class="replay" type="button" data-chart="chart-p1">Nochmals abspielen</button>
+            </figure>
+
+            <p class="statement statement--small">
+                So liesse sich das erklären. Doch dann schaut man auf die Heime.
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         DIE KARTE
+         ====================================================================== -->
+    <section class="section section--light" id="karte">
+        <div class="container split">
+            <div>
+                <p class="kicker">Die Karte</p>
+                <h2>Und trotzdem immer mehr Heime</h2>
+                <p>Wer weniger Hunde betreut, bräuchte weniger Plätze, dachten wir.</p>
+                <p>
+                    Die Statistik zeigt das Gegenteil: 2016 waren 11 Tierheime mit Hunden
+                    registriert, Ende 2025 sind es 91.
+                </p>
+                <div class="compare-card">
+                    <span class="compare-year">2016</span>
+                    <span class="compare-year">2025</span>
+                    <span class="compare-value" id="kpi-heime-start">11</span>
+                    <span class="compare-arrow" aria-hidden="true">→</span>
+                    <span class="compare-value" id="kpi-heime-end">91</span>
+                </div>
+            </div>
+
+            <figure class="chart-card chart-card--bordeaux">
+                <p class="chart-label">Registrierte Tierheime, Stand Dezember</p>
+                <p class="chart-number">
+                    <span id="kpi-heime">91</span>
+                    <span class="chart-number-note" id="kpi-heime-date">2025</span>
+                </p>
+                <div class="chart-box">
+                    <canvas id="chart-heime" role="img"
+                            aria-label="Liniendiagramm der registrierten Tierheime von 11 im Jahr 2016 auf 91 im Jahr 2025."></canvas>
+                </div>
+                <button class="replay" type="button" data-chart="chart-heime">Nochmals abspielen</button>
+                <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Stand jeweils Dezember.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         PARADOXON TEIL 2
+         ====================================================================== -->
+    <section class="section section--bordeaux" id="p2">
+        <div class="container split">
+            <div>
+                <p class="kicker">Paradoxon Teil 2</p>
+                <h2>Aus 51 Hunden pro Heim werden 14</h2>
+                <p>
+                    Teilt man die Heimhunde durch die Zahl der Heime, wird der Wandel
+                    sichtbar. 2018 kamen auf ein Tierheim im Schnitt 51 Hunde. 2025 sind
+                    es noch 14.
+                </p>
+            </div>
+
+            <figure class="chart-card chart-card--brown">
+                <p class="chart-label">Hunde pro Tierheim, Durchschnitt</p>
+                <div class="chart-number-pair">
+                    <p><span class="chart-number-year">2018</span><span class="chart-number" id="kpi-pro-heim-start">51</span></p>
+                    <p><span class="chart-number-year">2025</span><span class="chart-number" id="kpi-pro-heim-end">14</span></p>
+                </div>
+                <div class="chart-box">
+                    <canvas id="chart-pro-heim" role="img"
+                            aria-label="Balkendiagramm: Hunde pro Tierheim sinken von 51 im Jahr 2018 auf 14 im Jahr 2025."></canvas>
+                </div>
+                <button class="replay" type="button" data-chart="chart-pro-heim">Nochmals abspielen</button>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         FAZIT
+         ====================================================================== -->
+    <section class="section section--brown" id="fazit">
+        <div class="container split">
+            <div>
+                <p class="kicker">Fazit</p>
+                <p class="statement statement--small">Das Bild vom überfüllten Zwinger stimmt nicht mehr.</p>
+                <p class="statement statement--small">
+                    Warum es gleichzeitig mehr Heime gibt, beantworten die Zahlen allein nicht.
+                </p>
+
+                <div class="list-card">
+                    <h3>Was die Daten zeigen</h3>
+                    <ul>
+                        <li>Hunde im Land: rund +10 % seit 2018</li>
+                        <li>Hunde im Heim: rund −40 % seit 2018</li>
+                        <li>Tierheime: von 11 auf 91 seit 2016</li>
+                        <li>Hunde pro Heim: von 51 auf 14</li>
+                    </ul>
+                </div>
+
+                <div class="list-card">
+                    <h3>Was sie nicht zeigen</h3>
+                    <ul>
+                        <li>Ob neue Heime entstanden sind oder bestehende erst nach und nach registriert wurden</li>
+                        <li>Wie viele Hunde vermittelt werden: die Statistik zählt Bestände, keine Adoptionen</li>
+                        <li>Wie viele Plätze ein Heim hat</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="polaroids" aria-hidden="true">
+                <figure class="polaroid polaroid--left"><div class="photo"><img class="dog-image" alt=""></div></figure>
+                <figure class="polaroid polaroid--right"><div class="photo"><img class="dog-image" alt=""></div></figure>
+                <figure class="polaroid polaroid--center">
+                    <div class="photo"><img class="dog-image" alt=""></div>
+                    <svg class="icon polaroid-paw"><use href="#paw"/></svg>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p class="small">
+            IM3 Semesterprojekt · Daten: Identitas AG, Tierstatistik (Open Data) ·
+            Bilder: Dog CEO API
+        </p>
+    </div>
+</footer>
+
 </body>
 </html>
