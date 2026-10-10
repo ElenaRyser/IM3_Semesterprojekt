@@ -2,15 +2,16 @@
 /**
  * Transform: Datenaufbereitung für die Datenbank
  *
- * Kombiniert die Rohdaten aus 4 Extract-Dateien:
+ * Kombiniert die Rohdaten aus 3 Extract-Dateien (CSV):
  * - extract_registered_dogs.php (CSV: Hunde im Land)
  * - extract_total_dogs_shelter.php (CSV: Hunde im Tierheim)
  * - extract_animal_shelters.php (CSV: Registrierte Tierheime)
- * - extract_image_dog.php (API: Bild-URLs)
+ *
+ * Liest Bilder aus der Datenbank (vorher mit extract_image_dog.php gefüllt).
  *
  * Output: 2 Arrays
  * - $monthlyDogData: Monatliche Statistiken (year, month, dogsInLand, dogsInShelter, dogShelters)
- * - $dogImageData: Bild-URLs und Validierung (URLs nur, keine Dateien)
+ * - $dogImageData: Bild-URLs und Validierung aus der Datenbank
  */
 
 // ============================================================================
@@ -164,20 +165,25 @@ usort($monthlyDogData, function($a, $b) {
 });
 
 // ============================================================================
-// 4. BILD-URLs VALIDIEREN (von extract_image_dog.php)
+// 4. BILD-URLs AUS DATENBANK LADEN
 // ============================================================================
 
 $dogImageData = [];
 
-// extract_image_dog.php liefert URL via echo – diese auslesen
-$imageUrl = trim(shell_exec('php ' . __DIR__ . '/extract_image_dog.php'));
-
-if (!empty($imageUrl)) {
-    $isValid = isValidImageUrl($imageUrl);
-    $dogImageData[] = [
-        'imageUrl' => $imageUrl,
-        'validated' => $isValid ? 1 : 0,
-    ];
+if (isset($pdo)) {
+    try {
+        $images = $pdo->query('SELECT imageUrl, validated FROM dog_images ORDER BY id')->fetchAll();
+        foreach ($images as $row) {
+            $dogImageData[] = [
+                'imageUrl' => $row['imageUrl'],
+                'validated' => (int)$row['validated'],
+            ];
+        }
+    } catch (Throwable $error) {
+        echo "Hinweis: Konnte Bilder nicht aus Datenbank laden: " . $error->getMessage() . "\n";
+    }
+} else {
+    echo "Hinweis: Keine Datenbankverbindung verfügbar. Bilder werden übersprungen.\n";
 }
 
 // ============================================================================

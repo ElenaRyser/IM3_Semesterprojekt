@@ -1,17 +1,16 @@
 <?php
 /**
- * Load – schreibt die bereinigten Monatsdaten und Bild-URLs mit PDO in MySQL.
+ * Load – schreibt die bereinigten Monatsdaten mit PDO in MySQL.
  *
- * Vorher sql/schema.sql in phpMyAdmin ausführen. Danach diese Datei einmal
- * über die eigene Domain aufrufen.
+ * Workflow:
+ * 1. Zuerst: php extract_image_dog.php (füllt dog_images-Tabelle mit Bildern)
+ * 2. Dann: php load.php (schreibt Monatsdaten, liest Bilder aus DB)
  *
- * Diese Datei ist der letzte Schritt des ETL-Prozesses:
- *
- *   extract_image_dog.php -> transform.php -> PHP-Arrays -> INSERTs -> MySQL
+ * Vorher sql/schema.sql in phpMyAdmin ausführen.
  *
  * Speichert:
  * - Monatliche Hundedaten in monthly_dog_statistics
- * - Bild-URLs (nicht die Dateien selbst) in dog_images
+ * - Liest Bilder aus dog_images (müssen vorher mit extract_image_dog.php gefüllt sein)
  *
  * Alle Schreiboperationen laufen in einer Transaktion. Entweder wird der
  * komplette neue Datenstand gespeichert oder bei einem Fehler gar nichts.
@@ -32,6 +31,13 @@ if (!is_file($configPath)) {
 
 require $configPath;
 
+try {
+    $pdo = new PDO($dsn, $username, $password, $options);
+} catch (Throwable $error) {
+    http_response_code(500);
+    exit("Datenbankverbindung fehlgeschlagen: " . $error->getMessage() . "\n");
+}
+
 $result = include __DIR__ . '/transform.php';
 
 if (!is_array($result)) {
@@ -49,7 +55,6 @@ echo "Transform liefert " . count($monthlyData) . " Monatsdaten.\n";
 echo "Transform liefert " . count($imageData) . " Bild-URLs.\n\n";
 
 try {
-    $pdo = new PDO($dsn, $username, $password, $options);
     echo "Verbindung steht.\n\n";
 
     $pdo->beginTransaction();
