@@ -1,35 +1,32 @@
 <?php
+/**
+ * Extract: Registrierte Tierheime (CSV)
+ *
+ * Liest data/animal_shelters.csv und gibt jede Zeile als assoziatives Array zurück.
+ * Leere Zeilen werden übersprungen, Spaltennamen ohne Leerzeichen.
+ *
+ * Rückgabe: [['Year' => '2016', 'Month' => '1', 'AnimalCentre' => '...'], ...]
+ */
 
-header('Content-Type: text/plain; charset=utf-8');
+$handle = fopen(__DIR__ . '/../data/animal_shelters.csv', 'r');
 
-// 1. Die CSV-Datei zum Lesen öffnen.
-//    Tipp: fopen('data/attacks.csv', 'r')
-$handle = fopen('../data/animal_shelters.csv', 'r');
-
-// 2. Die erste Zeile ist die Kopfzeile mit den Spaltennamen. Sie lesen und die
-//    Leerzeichen entfernen (manche heissen z. B. "Species " mit Leerzeichen).
-//    Tipp: array_map('trim', fgetcsv($handle, null, ',', '"', ''))
+// Erste Zeile = Spaltennamen
 $header = array_map('trim', fgetcsv($handle, null, ',', '"', ''));
-print_r($header);
 
-// 3. Alle weiteren Zeilen in einer while-Schleife lesen.
-//    - Leere Zeilen überspringen (wenn die erste Spalte leer ist: continue).
-//    - Sonst mit array_combine($header, $row) ein assoziatives Array pro Angriff
-//      bauen und in $attacks sammeln.
-$dogs = [];
+$animalShelters = [];
 while (($row = fgetcsv($handle, null, ',', '"', '')) !== false) {
-    if ($row[0] === '') {
+    if ($row[0] === '' || $row[0] === null) {
         continue; // leere Zeile
     }
-    $dogs[] = array_combine($header, $row);
+    $animalShelters[] = array_combine($header, $row);
 }
 fclose($handle);
-print_r($dogs);
-// print_r($dogs[0]);
-print_r(count($dogs));
 
-// 4. Datei schliessen (fclose) und die Struktur prüfen:
-//    Spaltennamen und Anzahl Angriffe ausgeben.
+// Direkt im Browser geöffnet: Daten zur Kontrolle anzeigen
+if (realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__) {
+    header('Content-Type: text/plain; charset=utf-8');
+    print_r($animalShelters);
+    echo count($animalShelters) . " Zeilen\n";
+}
 
-
-// 5. Die ersten 5 Angriffe ausgeben, z. B. Year, Country und Activity.
+return $animalShelters;

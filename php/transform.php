@@ -2,46 +2,27 @@
 /**
  * Transform: Datenaufbereitung für die Datenbank
  *
- * Kombiniert die Rohdaten aus 3 Extract-Dateien (CSV):
+ * Holt die Rohdaten aus den 4 Extract-Dateien:
  * - extract_registered_dogs.php (CSV: Hunde im Land)
  * - extract_total_dogs_shelter.php (CSV: Hunde im Tierheim)
  * - extract_animal_shelters.php (CSV: Registrierte Tierheime)
+ * - extract_image_dog.php (API: Bild-URLs, gespeichert in data/dog_images.json)
  *
- * Liest Bilder aus der Datenbank (vorher mit extract_image_dog.php gefüllt).
+ * Kein Datenbankzugriff – das macht erst load.php.
  *
  * Output: 2 Arrays
  * - $monthlyDogData: Monatliche Statistiken (year, month, dogsInLand, dogsInShelter, dogShelters)
- * - $dogImageData: Bild-URLs und Validierung aus der Datenbank
+ * - $dogImageData: Geprüfte Bild-URLs (imageUrl, validated)
  */
 
 // ============================================================================
-// 1. CSV-DATEI LADEN
+// 1. ROHDATEN AUS DEN EXTRACTS HOLEN
 // ============================================================================
 
-function loadCsvData(string $filePath): array {
-    $data = [];
-    $handle = fopen($filePath, 'r');
-
-    if (!$handle) {
-        return [];
-    }
-
-    $header = array_map('trim', fgetcsv($handle, null, ',', '"', ''));
-
-    while (($row = fgetcsv($handle, null, ',', '"', '')) !== false) {
-        if ($row[0] === '' || $row[0] === null) {
-            continue;
-        }
-        $data[] = array_combine($header, $row);
-    }
-
-    fclose($handle);
-    return $data;
-}
-
-$dogsInLandRaw = loadCsvData('../data/registered_dogs.csv');
-$dogsInShelterRaw = loadCsvData('../data/total_dogs_shelter.csv');
-$dogSheltersRaw = loadCsvData('../data/animal_shelters.csv');
+$dogsInLandRaw = include __DIR__ . '/extract_registered_dogs.php';
+$dogsInShelterRaw = include __DIR__ . '/extract_total_dogs_shelter.php';
+$dogSheltersRaw = include __DIR__ . '/extract_animal_shelters.php';
+$dogImageUrlsRaw = include __DIR__ . '/extract_image_dog.php';
 
 // ============================================================================
 // 2. HILFSFUNKTIONEN
@@ -59,23 +40,45 @@ function getMonthKey(int $year, int $month): string {
     return "{$year}-{$month}";
 }
 
-function isValidImageUrl(string $url): bool {
-    $extension = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+function hasImageExtension(string $url): bool {
+    $extension = strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+    return in_array($extension, ['jpg', 'jpeg', 'png'], true);
+}
 
-    if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
-        return false;
+/**
+ * Prüft mit HEAD-Requests, ob die Bilder erreichbar sind.
+ * Die Anfragen laufen parallel (curl_multi), darum dauert das nur wenige Sekunden.
+ */
+function filterReachableImages(array $urls): array {
+    $multi = curl_multi_init();
+    curl_multi_setopt($multi, CURLMOPT_MAX_TOTAL_CONNECTIONS, 20);
+
+    $handles = [];
+    foreach ($urls as $url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_multi_add_handle($multi, $ch);
+        $handles[$url] = $ch;
     }
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    do {
+        curl_multi_exec($multi, $running);
+        curl_multi_select($multi);
+    } while ($running > 0);
 
-    curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $reachable = [];
+    foreach ($handles as $url => $ch) {
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpCode >= 200 && $httpCode < 300) {
+            $reachable[] = $url;
+        }
+        curl_multi_remove_handle($multi, $ch);
+    }
+    curl_multi_close($multi);
 
-    return $httpCode >= 200 && $httpCode < 300;
+    return $reachable;
 }
 
 // ============================================================================
@@ -165,25 +168,21 @@ usort($monthlyDogData, function($a, $b) {
 });
 
 // ============================================================================
-// 4. BILD-URLs AUS DATENBANK LADEN
+// 4. BILD-URLs PRÜFEN
 // ============================================================================
 
-$dogImageData = [];
+// Nur Texte, nur jpg/png, keine doppelten URLs
+$candidateUrls = array_filter($dogImageUrlsRaw, 'is_string');
+$candidateUrls = array_filter($candidateUrls, 'hasImageExtension');
+$candidateUrls = array_values(array_unique($candidateUrls));
 
-if (isset($pdo)) {
-    try {
-        $images = $pdo->query('SELECT imageUrl, validated FROM dog_images ORDER BY id')->fetchAll();
-        foreach ($images as $row) {
-            $dogImageData[] = [
-                'imageUrl' => $row['imageUrl'],
-                'validated' => (int)$row['validated'],
-            ];
-        }
-    } catch (Throwable $error) {
-        echo "Hinweis: Konnte Bilder nicht aus Datenbank laden: " . $error->getMessage() . "\n";
-    }
-} else {
-    echo "Hinweis: Keine Datenbankverbindung verfügbar. Bilder werden übersprungen.\n";
+// Nur Bilder, die wirklich erreichbar sind
+$dogImageData = [];
+foreach (filterReachableImages($candidateUrls) as $url) {
+    $dogImageData[] = [
+        'imageUrl' => $url,
+        'validated' => 1,
+    ];
 }
 
 // ============================================================================

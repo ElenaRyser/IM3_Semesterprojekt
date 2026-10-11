@@ -1,16 +1,15 @@
 <?php
 /**
- * Load – schreibt die bereinigten Monatsdaten mit PDO in MySQL.
+ * Load – schreibt die bereinigten Daten aus transform.php mit PDO in MySQL.
  *
- * Workflow:
- * 1. Zuerst: php extract_image_dog.php (füllt dog_images-Tabelle mit Bildern)
- * 2. Dann: php load.php (schreibt Monatsdaten, liest Bilder aus DB)
+ * Ablauf: load.php -> transform.php -> extract_*.php
+ * Ein Aufruf von load.php reicht für den ganzen ETL-Prozess.
  *
  * Vorher sql/schema.sql in phpMyAdmin ausführen.
  *
  * Speichert:
  * - Monatliche Hundedaten in monthly_dog_statistics
- * - Liest Bilder aus dog_images (müssen vorher mit extract_image_dog.php gefüllt sein)
+ * - Geprüfte Bild-URLs in dog_images
  *
  * Alle Schreiboperationen laufen in einer Transaktion. Entweder wird der
  * komplette neue Datenstand gespeichert oder bei einem Fehler gar nichts.
@@ -54,6 +53,12 @@ $metadata = $result['metadata'];
 echo "Transform liefert " . count($monthlyData) . " Monatsdaten.\n";
 echo "Transform liefert " . count($imageData) . " Bild-URLs.\n\n";
 
+// Ohne Daten nichts löschen – sonst wäre die Datenbank danach leer.
+if ($monthlyData === [] || $imageData === []) {
+    http_response_code(500);
+    exit("Abbruch: Transform hat keine Monatsdaten oder keine Bilder geliefert. Datenbank bleibt unverändert.\n");
+}
+
 try {
     echo "Verbindung steht.\n\n";
 
@@ -65,7 +70,7 @@ try {
     echo $deletedStats . " alte Monatsdaten gelöscht.\n";
     echo $deletedImages . " alte Bild-URLs gelöscht.\n\n";
 
-    // Insert monatliche Statistiken (unverändert von früher)
+    // Insert monatliche Statistiken
     $insertStat = $pdo->prepare(
         'INSERT INTO monthly_dog_statistics
             (year, month, dogsInLand, dogsInShelter, dogShelters)
