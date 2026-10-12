@@ -1,92 +1,56 @@
-/* ==========================================================================
-   Spurensuche – Stylesheet
-
-   Inhalt:
-   1. Farben, Schriftgrössen und Abstände (Variablen)
-   2. Grundlagen
-   3. Layout-Hilfen (container, 12-Spalten-Raster)
-   4. Abschnitte: helle und dunkle Hintergründe
-   5. Navigation und Kopfzeile
-   6. Typografie
-   7. Hero und Polaroids
-   8. Grafik-Karten
-   9. Kleine Karten (Frage, Vergleich, Listen)
-   10. Mobile
-   ========================================================================== */
-
-
-/* --------------------------------------------------------------------------
-   1. Farben, Schriftgrössen und Abstände
-   Alle Werte stehen hier an einem Ort. Will man etwas ändern,
-   ändert man es nur hier, und es ändert sich auf der ganzen Seite.
-   -------------------------------------------------------------------------- */
 :root {
-    /* --- Farben --- */
-    --cream: #f3efe7;        /* heller Hintergrund */
-    --tan: #d08a66;          /* Kopfzeile, Infokarten */
-    --orange: #c9592f;       /* Button, Akzent */
-    --orange-light: #f2b48a; /* Akzent auf dunklem Grund */
-    --brown: #7a4530;        /* brauner Abschnitt */
-    --bordeaux: #3b0f0f;     /* dunkelster Abschnitt */
-    --ink: #1a1a1a;          /* Textfarbe auf hell */
+    --cream: #f3efe7;
+    --tan: #d08a66;
+    --orange: #c9592f;
+    --orange-light: #f2b48a;
+    --brown: #7a4530;
+    --bordeaux: #3b0f0f;
+    --ink: #1a1a1a;
     --white: #ffffff;
 
-    /* Schriften (--font-title, --font-text) stehen in fonts.css */
+    /* Schriften: --font-title und --font-text stehen in fonts.css */
 
-    /* --- Schriftgrössen: nur diese 5 Stufen verwenden ---
-       Jede Stufe ist mindestens 1.25-mal grösser als die vorherige,
-       dadurch sieht man den Unterschied (Hierarchie) sofort.
-       clamp(min, bevorzugt, max): wächst mit der Fensterbreite, bleibt aber zwischen min und max. */
-    --fs-display: clamp(3rem, 7vw, 5.5rem); /* 48–88 px: Hero-Titel, grosse Zahl jeder Grafik */
-    --fs-title: clamp(2rem, 4vw, 3rem);     /* 32–48 px: Kapitel-Titel, Kennzahlen */
-    --fs-lead: 1.375rem;                    /* 22 px: Einleitungen, Aussagen, zentrale Frage */
-    --fs-text: 1.0625rem;                   /* 17 px: Fliesstext, Buttons */
-    --fs-label: 0.8125rem;                  /* 13 px: Kicker, Navigation, Quellen, Jahreszahlen */
+    /* --- Schriftgrössen */
+    --fs-h1: 60px; /* Hero Titel */
+    --fs-h2: 30px; /* Untertitel */
+    --fs-p:  17px; /* Fliesstext, Button */
+    --fs-h4: 13px; /* Kleintext */
 
-    /* --- Abstände: nur diese 6 Stufen verwenden ---
-       Faustregel: innerhalb eines Blocks s1–s3, zwischen Blöcken s4–s5, zwischen Abschnitten s6. */
-    --s1: 8px;
-    --s2: 16px;
-    --s3: 24px;
-    --s4: 40px;
-    --s5: 64px;
-    --s6: 120px;
+    /* --- Abstände */
+    --s1: 12px; /* klein: innerhalb eines Blocks */
+    --s2: 32px; /* mittel: zwischen Blöcken */
+    --s3: 96px; /* gross: zwischen Abschnitten */
 
     --radius: 28px;
 }
 
 
-/* --------------------------------------------------------------------------
-   2. Grundlagen
-   -------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-    box-sizing: border-box; /* Breite inkl. Padding rechnen, das macht Layouts einfacher */
+/* --- Grundlagen --- */
+* {
+    box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth; /* Klick in der Navigation scrollt weich statt zu springen */
+    scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
     font-family: var(--font-text);
-    font-size: var(--fs-text);
+    font-size: var(--fs-p);
     line-height: 1.6;
     color: var(--ink);
-    background-color: var(--cream);
-
-    /* Mauszeiger = Hundepfote aus dem Logo.
-       16 16 = der "Klickpunkt" liegt in der Mitte des 32×32-Bildes.
-       auto = normaler Zeiger, falls das Bild nicht lädt. */
+    background: var(--cream);
     cursor: url("../img/cursor-paw.svg") 16 16, auto;
 }
 
-/* Links und Buttons zeigen sonst die Hand – hier auch die Pfote */
 a,
 button {
     cursor: url("../img/cursor-paw.svg") 16 16, pointer;
+}
+
+a {
+    color: inherit;
 }
 
 img {
@@ -94,234 +58,115 @@ img {
     max-width: 100%;
 }
 
-a {
-    color: inherit;
+
+/* --- Schrift --- */
+h1,
+h2,
+h3 {
+    margin: 0 0 var(--s2);
+    font-family: var(--font-title);
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+h1 {
+    font-size: var(--fs-h1);
+}
+
+h2 {
+    font-size: var(--fs-h2);
+}
+
+h3 {
+    font-size: var(--fs-p);
+}
+
+p {
+    max-width: 34em;
+    margin: 0 0 var(--s1);
+}
+
+.small {
+    font-size: var(--fs-h4);
+}
+
+/* Kleiner Titel über der Überschrift, z. B. "PROLOG" */
+.kicker,
+.hero-kicker,
+.info-card-label,
+.chart-label {
+    margin-bottom: var(--s1);
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.kicker,
+.info-card-label {
+    color: var(--brown);
+}
+
+.statement {
+    max-width: 26em;
+    margin-top: var(--s3);
+    line-height: 1.4;
+}
+
+.statement--small {
+    margin-top: var(--s2);
 }
 
 
-/* --------------------------------------------------------------------------
-   3. Layout-Hilfen
-   -------------------------------------------------------------------------- */
-
-/* Begrenzt die Breite des Inhalts und setzt seitlich Abstand */
+/* --- Layout --- */
 .container {
-    width: 100%;
     max-width: 1120px;
     margin: 0 auto;
-    padding: 0 var(--s3);
+    padding: 0 var(--s2);
 }
 
 .container--narrow {
     max-width: 820px;
 }
 
-/* Raster für Text + Grafik.
-   Auf dem Handy: eine Spalte, alles untereinander. */
+/* Text links (schmal), Grafik rechts (breit) */
 .split {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--s4);
+    grid-template-columns: 5fr 7fr;
+    gap: var(--s2);
     align-items: start;
 }
 
-/* Spalten dürfen schmaler werden als ihr Inhalt.
-   Sonst macht ein Diagramm (Canvas) die Spalte auf dem Handy breiter als den Bildschirm. */
 .split > * {
     min-width: 0;
 }
 
-/* Ab 861 px Breite: 12-Spalten-Raster.
-   Text immer in den Spalten 1–5, Grafik in 6–12.
-   Die Grafik ist damit die grösste Fläche im Abschnitt, und alle Abschnitte
-   haben dieselben Kanten – nichts "fliegt" mehr frei im Raum. */
-@media (min-width: 861px) {
-    .split {
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        column-gap: var(--s3);
-    }
-
-    .split > :first-child {
-        grid-column: 1 / span 5;
-        padding-right: var(--s3); /* etwas mehr Luft zwischen Text und Grafik */
-    }
-
-    .split > :last-child {
-        grid-column: 6 / span 7;
-    }
-
-    /* Hero: Hier ist der Titel die Hauptsache, darum umgekehrt (Text 7, Fotos 5) */
-    .hero .split > :first-child {
-        grid-column: 1 / span 7;
-    }
-
-    .hero .split > :last-child {
-        grid-column: 8 / span 5;
-    }
+/* Hero: Titel breit, Fotos schmal */
+.hero .split {
+    grid-template-columns: 7fr 5fr;
+    gap: var(--s3);
+    align-items: center;
 }
 
 
-/* --------------------------------------------------------------------------
-   4. Abschnitte
-   Jeder Abschnitt hat eine einfarbige Hintergrundfarbe: hell oder dunkel.
-   -------------------------------------------------------------------------- */
+/* --- Abschnitte --- */
 .section {
-    padding: var(--s6) 0;       /* oben genug Platz, damit die Navigation nichts verdeckt */
-    overflow-x: clip;           /* schräge Polaroids dürfen nicht seitlich aus der Seite ragen */
+    padding: var(--s3) 0;
+    overflow-x: clip;
 }
 
 .section--light {
-    background-color: var(--cream);
-}
-
-/* Dunkle Abschnitte: heller Text */
-.section--bordeaux,
-.section--brown {
-    color: var(--cream);
+    background: var(--cream);
 }
 
 .section--bordeaux {
-    background-color: var(--bordeaux);
+    color: var(--cream);
+    background: var(--bordeaux);
 }
 
 .section--brown {
-    background-color: var(--brown);
-}
-
-.section--center {
-    text-align: center;
-}
-
-
-/* --------------------------------------------------------------------------
-   5. Navigation und Kopfzeile
-   -------------------------------------------------------------------------- */
-
-/* Die Navigation bleibt immer oben rechts stehen.
-   (Die kleinen Innenabstände der Pillen bleiben bewusst ausserhalb der Abstands-Skala.) */
-.nav {
-    position: fixed;
-    top: var(--s3);
-    right: var(--s4);
-    z-index: 10;
-    display: flex;
-    gap: 4px;
-    padding: 6px 10px;
-    background: var(--cream);
-    border-radius: 999px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
-}
-
-.nav a {
-    position: relative; /* liegt über der dunklen Pille */
-    z-index: 1;
-    padding: 4px 10px;
-    font-size: var(--fs-label);
-    font-weight: 500;
-    color: var(--brown);
-    text-decoration: none;
-    border-radius: 999px;
-    white-space: nowrap;
-    transition: background-color 0.2s, color 0.3s;
-}
-
-.nav a:hover {
-    background: rgba(122, 69, 48, 0.12);
-}
-
-/* Aktiver Abschnitt: helle Schrift (die dunkle Pille liegt dahinter).
-   Die Klasse .is-active setzt script.js */
-.nav a.is-active {
-    color: var(--white);
-}
-
-.nav a.is-active:hover {
-    background: transparent;
-}
-
-/* Dunkle Pille: EIN Element, das hinter das aktive Kapitel gleitet.
-   Position und Breite setzt script.js, transition macht die Bewegung weich. */
-.nav-pill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--bordeaux);
-    border-radius: 999px;
-    opacity: 0; /* im Hero unsichtbar */
-    transition: transform 0.4s ease, width 0.4s ease, opacity 0.3s;
-}
-
-.nav-pill.is-visible {
-    opacity: 1;
-}
-
-/* Orangefarbenes Band ganz oben mit dem Logo */
-.site-header {
-    background: var(--tan);
-    padding: var(--s3) 0;
-}
-
-.logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-title);
-    font-size: var(--fs-text);
-    text-transform: uppercase;
-    text-decoration: none;
-}
-
-/* Pfoten-Symbol: übernimmt die Textfarbe (currentColor) */
-.icon {
-    width: 1.1em;
-    height: 1.1em;
-    fill: currentColor;
-}
-
-
-/* --------------------------------------------------------------------------
-   6. Typografie
-   Nur die 5 Schriftgrössen aus Teil 1 verwenden (--fs-…).
-   -------------------------------------------------------------------------- */
-h1,
-h2,
-h3 {
-    font-family: var(--font-title);
-    font-weight: 400; /* Fredoka One ist schon fett, sonst macht der Browser sie künstlich noch fetter */
-    line-height: 1.05;
-    margin: 0 0 var(--s3);
-    text-wrap: balance; /* verteilt mehrzeilige Titel gleichmässiger */
-}
-
-h1 {
-    font-size: var(--fs-display);
-}
-
-h2 {
-    font-size: var(--fs-title);
-}
-
-h3 {
-    font-size: var(--fs-lead);
-}
-
-p {
-    margin: 0 0 var(--s2);
-    max-width: 34em; /* lange Zeilen sind schwer lesbar */
-}
-
-.section--center p {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Kleiner Titel über der Überschrift, z. B. "PROLOG" */
-.kicker {
-    margin-bottom: var(--s2);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brown);
+    color: var(--cream);
+    background: var(--brown);
 }
 
 .section--bordeaux .kicker,
@@ -334,56 +179,114 @@ p {
     color: var(--orange-light);
 }
 
-/* Aussage-Sätze, z. B. "Die Realität ist viel komplexer …" */
-.statement {
-    margin-top: var(--s5);
-    font-size: var(--fs-lead);
-    line-height: 1.4;
-    max-width: 26em;
+.section--center {
+    text-align: center;
 }
 
-.statement--small {
-    margin-top: var(--s3);
-}
-
-.small {
-    font-size: var(--fs-label);
+.section--center p {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
-/* --------------------------------------------------------------------------
-   7. Hero und Polaroids
-   -------------------------------------------------------------------------- */
-.hero {
-    padding-top: var(--s4);
+/* --- Kopfzeile und Navigation --- */
+.site-header {
+    padding: var(--s2) 0;
+    background: var(--tan);
 }
 
-.hero-kicker {
-    margin-bottom: var(--s2);
-    font-size: var(--fs-label);
-    font-weight: 700;
+.logo {
+    display: inline-flex;
+    align-items: center;
+    height: 48px
+    gap: 6px;
+    font-family: var(--font-title);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    text-decoration: none;
+}
+
+.icon {
+    width: 1.1em;
+    height: 1.1em;
+    fill: currentColor;
+}
+
+.nav {
+    position: fixed;
+    top: var(--s2);
+    right: var(--s2);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--cream);
+    border-radius: 999px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.nav a {
+    position: relative;
+    z-index: 1;
+    padding: 4px 10px;
+    font-size: var(--fs-h4);
+    font-weight: 500;
+    color: var(--brown);
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 999px;
+    transition: background-color 0.2s, color 0.3s;
+}
+
+.nav a:hover {
+    background: rgba(122, 69, 48, 0.12);
+}
+
+/* .is-active setzt script.js */
+.nav a.is-active {
+    color: var(--white);
+    background: transparent;
+}
+
+/* Dunkle Pille hinter dem aktiven Link, wird von script.js verschoben */
+.nav-pill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--bordeaux);
+    border-radius: 999px;
+    opacity: 0;
+    transition: transform 0.4s ease, width 0.4s ease, opacity 0.3s;
+}
+
+.nav-pill.is-visible {
+    opacity: 1;
+}
+
+
+/* --- Hero --- */
+.hero {
+    padding-top: var(--s2);
 }
 
 .hero-lead {
-    margin-top: var(--s3);
     max-width: 26em;
+    margin-top: var(--s2);
 }
 
 .hero-actions {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
-    gap: var(--s3);
-    margin-top: var(--s4);
+    align-items: center;
+    gap: var(--s2);
+    margin-top: var(--s2);
 }
 
 .button {
     display: inline-flex;
     gap: var(--s1);
-    padding: var(--s2) var(--s4);
-    font-size: var(--fs-text);
+    padding: var(--s1) var(--s2);
     font-weight: 500;
     color: var(--white);
     text-decoration: none;
@@ -396,14 +299,14 @@ p {
     transform: translateY(2px);
 }
 
-/* Polaroid-Stapel: drei Fotos liegen übereinander (position: absolute)
-   und werden unterschiedlich gedreht. */
+
+/* --- Polaroids: drei Fotos übereinander, schräg gedreht --- */
 .polaroids {
     position: relative;
-    width: 100%;        /* nötig, weil die Fotos darin absolut liegen und sonst keine Breite geben */
-    height: 380px;
-    max-width: 440px;
-    margin: var(--s4) auto 0;
+    width: 100%;
+    max-width: 400px;
+    height: 340px;
+    margin: 0 auto;
 }
 
 .polaroid {
@@ -412,48 +315,27 @@ p {
     left: 50%;
     width: 62%;
     margin: 0;
-    padding: 12px 12px 64px; /* Polaroid-Form: unten mehr Rand wie bei einem echten Foto */
+    padding: 12px 12px 64px;
     background: var(--white);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Bildrahmen: hält die Form (quadratisch), auch solange noch kein Bild
-   geladen ist. Das Bild liegt darin und füllt die ganze Fläche. */
-.photo {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    background: #d9d2c5; /* Platzhalter-Farbe */
-}
-
-.photo img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Bild füllt die Fläche, ohne verzerrt zu werden */
-}
-
-/* Ohne Bildadresse (src) noch nichts anzeigen, sonst erscheint ein kaputtes Bild-Symbol */
-.photo img:not([src]) {
-    visibility: hidden;
-}
-
 .polaroid--left {
-    transform: translateX(-95%) rotate(-12deg);
     top: 40px;
+    transform: translateX(-95%) rotate(-12deg);
 }
 
 .polaroid--right {
-    transform: translateX(-5%) rotate(10deg);
     top: 40px;
+    transform: translateX(-5%) rotate(10deg);
 }
 
 .polaroid--center {
-    transform: translateX(-50%);
     z-index: 1;
+    transform: translateX(-50%);
 }
 
-/* Klebestreifen oben auf dem mittleren Foto */
+/* Klebestreifen */
 .polaroid--center::before {
     content: "";
     position: absolute;
@@ -475,60 +357,71 @@ p {
     transform: translateX(-50%);
 }
 
-
-/* --------------------------------------------------------------------------
-   8. Grafik-Karten
-   -------------------------------------------------------------------------- */
-.chart-card {
-    margin: 0 0 var(--s3);
-    padding: var(--s4) var(--s4) var(--s3);
-    border-radius: var(--radius);
-    color: var(--cream);
-    text-align: left;
+/* Quadratischer Bildrahmen, das Bild füllt ihn aus */
+.photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #d9d2c5;
 }
 
-.chart-card--tan      { background: var(--tan); color: var(--bordeaux); }
+.photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo img:not([src]) {
+    visibility: hidden;
+}
+
+
+/* --- Grafik-Karten --- */
+.chart-card {
+    margin: 0 0 var(--s2);
+    padding: var(--s2) var(--s2) var(--s2);
+    color: var(--cream);
+    text-align: left;
+    border-radius: var(--radius);
+}
+
+.chart-card--tan      { color: var(--bordeaux); background: var(--tan); }
 .chart-card--orange   { background: #b9563a; }
 .chart-card--brown    { background: var(--brown); }
 .chart-card--bordeaux { background: var(--bordeaux); }
 .chart-card--plain    { background: rgba(0, 0, 0, 0.06); }
 
-/* Auf braunem Abschnitt braucht die braune Karte etwas Kontrast */
 .section--bordeaux .chart-card--brown {
     background: #6e3d2a;
 }
 
 .chart-label {
     margin-bottom: var(--s1);
-    font-size: var(--fs-label);
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     opacity: 0.85;
 }
 
 .chart-number {
     display: flex;
-    align-items: baseline;
     flex-wrap: wrap;
-    gap: var(--s2);
-    margin: 0 0 var(--s2);
+    align-items: baseline;
+    gap: var(--s1);
+    margin: 0 0 var(--s1);
     font-family: var(--font-title);
-    font-size: var(--fs-display);
+    font-size: var(--fs-h1);
     line-height: 1;
 }
 
 .chart-number-note {
     font-family: var(--font-text);
-    font-weight: 400;
-    font-size: var(--fs-text);
+    font-size: var(--fs-p);
     color: var(--orange-light);
 }
 
-/* P2: zwei Zahlen nebeneinander (2018 und 2025) */
 .chart-number-pair {
     display: flex;
-    gap: var(--s3);
+    gap: var(--s2);
 }
 
 .chart-number-pair p {
@@ -538,22 +431,21 @@ p {
 }
 
 .chart-number-year {
-    font-size: var(--fs-label);
+    font-size: var(--fs-h4);
     opacity: 0.8;
 }
 
-/* Chart.js braucht einen Behälter mit fester Höhe und position: relative,
-   damit das Diagramm sich richtig an die Grösse anpasst. */
+/* Chart.js braucht eine feste Höhe */
 .chart-box {
     position: relative;
     height: 340px;
-    margin: var(--s2) 0;
+    margin: var(--s1) 0;
 }
 
 .replay {
-    padding: var(--s1) var(--s2);
+    padding: var(--s1) var(--s1);
     font: inherit;
-    font-size: var(--fs-label);
+    font-size: var(--fs-h4);
     font-weight: 500;
     color: inherit;
     background: transparent;
@@ -566,48 +458,45 @@ p {
 }
 
 .chart-source {
-    margin-top: var(--s2);
-    font-size: var(--fs-label);
+    margin-top: var(--s1);
+    font-size: var(--fs-h4);
     opacity: 0.75;
 }
 
-/* P1: die zwei Kennzahl-Pillen über dem Diagramm */
+/* Zwei Kennzahl-Pillen über dem Diagramm */
 .kpi-pills {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: var(--s2);
-    margin-top: var(--s2);
+    gap: var(--s1);
+    margin-top: var(--s1);
 }
 
 .kpi-pill {
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: var(--s2) var(--s4) var(--s2) var(--s3);
-    font-size: var(--fs-label);
+    padding: var(--s1) var(--s2) var(--s1) var(--s2);
+    font-size: var(--fs-h4);
     border-radius: 40px;
 }
 
 .kpi-pill-value {
     font-family: var(--font-title);
-    font-size: var(--fs-title);
+    font-size: var(--fs-h2);
     line-height: 1.1;
 }
 
-.kpi-pill--orange { background: var(--orange); color: var(--white); }
-.kpi-pill--cream  { background: var(--cream); color: var(--ink); }
+.kpi-pill--orange { color: var(--white); background: var(--orange); }
+.kpi-pill--cream  { color: var(--ink); background: var(--cream); }
 
 
-/* --------------------------------------------------------------------------
-   9. Kleine Karten
-   -------------------------------------------------------------------------- */
-
-/* Hundebild im Abschnitt Hunde-Fieber */
+/* --- Karten --- */
 .photo-card {
-    margin: var(--s4) 0 0;
+    margin: var(--s2) 0 0;
     overflow: hidden;
-    border-radius: var(--radius);
     background: var(--bordeaux);
+    border-radius: var(--radius);
 }
 
 .photo-card .photo {
@@ -617,142 +506,148 @@ p {
 
 /* "Die zentrale Frage" */
 .info-card {
-    margin-top: var(--s4);
-    padding: var(--s3) var(--s4);
+    margin-top: var(--s2);
+    padding: var(--s2) var(--s2);
     background: var(--tan);
     border-radius: var(--radius);
 }
 
 .info-card-label {
     margin-bottom: var(--s1);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brown);
 }
 
 .info-card-text {
     margin: 0;
-    font-size: var(--fs-lead);
-    line-height: 1.35;
+    line-height: 1.4;
 }
 
-/* "2016 → 2025" bei Die Karte: ein kleines Raster mit 3 Spalten.
-   Oben die Jahre, unten Zahl – Pfeil – Zahl. */
+/* "2018 → 2025": oben die Jahre, unten Zahl – Pfeil – Zahl */
 .compare-card {
     display: inline-grid;
     grid-template-columns: auto auto auto;
-    column-gap: var(--s3);
     align-items: center;
-    margin-top: var(--s4);
-    padding: var(--s2) var(--s4) var(--s3);
+    column-gap: var(--s2);
+    margin-top: var(--s2);
+    padding: var(--s1) var(--s2) var(--s2);
     background: var(--tan);
     border-radius: var(--radius);
 }
 
-.compare-year:first-child { grid-column: 1; }
-.compare-year:nth-child(2) { grid-column: 3; }
-
 .compare-year {
-    font-size: var(--fs-label);
+    font-size: var(--fs-h4);
     font-weight: 500;
     text-align: center;
 }
 
+.compare-year:first-child  { grid-column: 1; }
+.compare-year:nth-child(2) { grid-column: 3; }
+
 .compare-value,
 .compare-arrow {
-    font-size: var(--fs-title);
+    font-size: var(--fs-h2);
     line-height: 1.1;
 }
 
-/* Fazit: helle Karten mit Listen */
+/* Fazit */
 .list-card {
-    margin-top: var(--s4);
-    padding: var(--s3) var(--s4);
+    margin-top: var(--s2);
+    padding: var(--s2) var(--s2);
     color: var(--orange);
     background: var(--cream);
     border-radius: var(--radius);
 }
 
 .list-card h3 {
-    margin-bottom: var(--s2);
+    margin-bottom: var(--s1);
     font-family: var(--font-text);
-    font-size: var(--fs-lead);
     font-weight: 500;
 }
 
 .list-card ul {
     margin: 0;
-    padding-left: var(--s3);
+    padding-left: var(--s2);
     font-weight: 700;
 }
 
+
+/* --- Footer --- */
 .site-footer {
-    padding: var(--s4) 0;
+    padding: var(--s2) 0;
+    font-size: var(--fs-h4);
     color: var(--cream);
     background: var(--bordeaux);
 }
 
-/* Footer: links Quellen, rechts Copyright – nebeneinander.
-   space-between schiebt die beiden Absätze an den linken und rechten Rand. */
 .site-footer .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--s3);
+    gap: var(--s2);
 }
 
 .site-footer p {
+    max-width: none;
     margin: 0;
-    max-width: none; /* Footer-Text darf breiter sein als normale Absätze (34em) */
 }
 
 
-/* --------------------------------------------------------------------------
-   10. Mobile
-   Unter 860 px Breite: Navigation scrollt seitlich, kleinere Abstände.
-   (Das Raster ist hier automatisch einspaltig, siehe Teil 3.)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+                                     Responsive
+   ========================================================================== */
+
+/* Tablet und Handy */
 @media (max-width: 860px) {
-    .section {
-        padding: var(--s6) 0 var(--s5);
+    :root {
+        --fs-h1: 44px;
+        --fs-h2: 26px;
+    }
+
+    .split,
+    .hero .split {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding-top: var(--s2);
+    }
+
+    .site-header {
+        padding-top: var(--s3);
     }
 
     .nav {
         top: 12px;
         left: 12px;
         right: 12px;
-        overflow-x: auto;        /* zu breite Navigation lässt sich wischen */
-        scrollbar-width: none;   /* Scrollbalken ausblenden */
-        scroll-behavior: smooth; /* automatisches Mitwischen läuft weich */
+        overflow-x: auto;
+        scrollbar-width: none;
     }
 
-    .site-header {
-        padding-top: var(--s5);  /* Platz für die Navigation */
+    .polaroids {
+        max-width: 340px;
+        height: 300px;
+        margin-top: var(--s2);
     }
 
     .chart-card {
-        padding: var(--s3);
+        padding: var(--s2);
     }
 
     .chart-box {
         height: 260px;
     }
 
-    .kpi-pills {
-        flex-wrap: wrap;
-    }
-
-    .polaroids {
-        height: 300px;
-        max-width: 340px;
-    }
-
-    /* Footer auf dem Handy: untereinander statt nebeneinander */
     .site-footer .container {
         flex-direction: column;
         align-items: flex-start;
-        gap: var(--s2);
+        gap: var(--s1);
+    }
+}
+
+/* Handy */
+@media (max-width: 480px) {
+    :root {
+        --fs-h1: 36px;
+        --fs-h2: 24px;
     }
 }
