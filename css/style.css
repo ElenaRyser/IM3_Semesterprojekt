@@ -5,7 +5,7 @@
    1. Farben und Schriften (Variablen)
    2. Grundlagen
    3. Layout-Hilfen (container, split)
-   4. Abschnitte: helle und dunkle Hintergründe mit Karomuster
+   4. Abschnitte: helle und dunkle Hintergründe
    5. Navigation und Kopfzeile
    6. Typografie
    7. Hero und Polaroids
@@ -29,11 +29,6 @@
     --bordeaux: #3b0f0f;     /* dunkelster Abschnitt */
     --ink: #1a1a1a;          /* Textfarbe auf hell */
     --white: #ffffff;
-
-    /* Linien des Karomusters: rötlich und halb durchsichtig */
-    --grid-light: rgba(214, 110, 110, 0.22);
-    --grid-dark: rgba(214, 90, 70, 0.16);
-    --grid-size: 40px;
 
     /* Schriften (--font-title, --font-text) stehen in fonts.css */
 
@@ -118,29 +113,21 @@ a {
 
 /* --------------------------------------------------------------------------
    4. Abschnitte
-   Jeder Abschnitt hat einen Hintergrund mit Karomuster. Das Muster entsteht
-   aus zwei Verläufen: einer zeichnet waagrechte, einer senkrechte Linien.
+   Jeder Abschnitt hat eine einfarbige Hintergrundfarbe: hell oder dunkel.
    -------------------------------------------------------------------------- */
 .section {
     padding: 120px 0 96px;      /* oben mehr Platz, damit die Navigation nichts verdeckt */
     overflow-x: clip;           /* schräge Polaroids dürfen nicht seitlich aus der Seite ragen */
-    background-size: var(--grid-size) var(--grid-size);
 }
 
 .section--light {
     background-color: var(--cream);
-    background-image:
-        linear-gradient(var(--grid-light) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-light) 1px, transparent 1px);
 }
 
-/* Dunkle Abschnitte: gleiche Linien, aber heller Text */
+/* Dunkle Abschnitte: heller Text */
 .section--bordeaux,
 .section--brown {
     color: var(--cream);
-    background-image:
-        linear-gradient(var(--grid-dark) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-dark) 1px, transparent 1px);
 }
 
 .section--bordeaux {
