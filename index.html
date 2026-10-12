@@ -4,27 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spurensuche – Das Paradoxon der Schweizer Tierheime</title>
+    <title>Spurensuche</title>
+    <link rel="icon" type="image/svg" href="img/cursor-paw.svg">
     <meta name="description"
-          content="Eine datengetriebene Spurensuche 2016–2025: Immer weniger Hunde leben im Tierheim, trotzdem gibt es immer mehr Tierheime.">
+          content="Eine datengetriebene Spurensuche 2018–2025: Immer weniger Hunde leben im Tierheim, trotzdem gibt es immer mehr Tierheime.">
 
-    <!-- Zuerst die Schriften, danach das Layout (style.css braucht die Schrift-Variablen) -->
     <link rel="stylesheet" href="css/fonts.css">
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Chart.js: Bibliothek für die Diagramme. Muss vor script.js geladen werden -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-
-    <!-- type="module": das Skript läuft erst, wenn die Seite fertig geladen ist,
-         und wir dürfen await direkt verwenden -->
     <script src="js/script.js" type="module"></script>
 </head>
-
 <body>
 
-<!-- ==========================================================================
-     Pfoten-Symbol: einmal definiert, danach überall mit <use href="#paw"> wiederverwendet
-     ========================================================================== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="paw" viewBox="0 0 24 24">
         <ellipse cx="12" cy="16" rx="5.5" ry="4.5"/>
@@ -35,12 +27,8 @@
     </symbol>
 </svg>
 
-<!-- ==========================================================================
-     Navigation: bleibt beim Scrollen oben rechts stehen (position: fixed).
-     Den aktiven Abschnitt markiert script.js mit der Klasse .is-active.
-     ========================================================================== -->
+
 <nav class="nav" aria-label="Kapitel">
-    <!-- Dunkle Pille hinter dem aktiven Kapitel: script.js schiebt sie an die richtige Stelle -->
     <span class="nav-pill" aria-hidden="true"></span>
     <a href="#prolog">Prolog</a>
     <a href="#hunde-fieber">Hunde-Fieber</a>
@@ -51,9 +39,6 @@
     <a href="#fazit">Fazit</a>
 </nav>
 
-<!-- ==========================================================================
-     HERO
-     ========================================================================== -->
 <header class="site-header">
     <div class="container">
         <a class="logo" href="#top">
@@ -66,22 +51,27 @@
 <section class="section section--light hero" id="top">
     <div class="container split">
         <div>
-            <p class="hero-kicker">Eine datengetriebene Spurensuche 2016 – 2025</p>
+            <p class="hero-kicker">Eine datengetriebene Spurensuche 2018 – 2025</p>
             <h1>Das Paradoxon der Schweizer Tierheime</h1>
             <p class="hero-lead">
                 Immer weniger Hunde leben im Tierheim. Trotzdem gibt es immer
                 mehr Tierheime. Wie passt das zusammen?
             </p>
             <div class="hero-actions">
-                <a class="button" href="#prolog">Folge der Spur <span aria-hidden="true">↓</span></a>
+                <a class="button" href="#prolog">Folge der Spur <img class="button-icon" src="img/arrow_icon_bottom.svg" alt="Arrow pointing down"></a>
                 <span class="small">Lesezeit ca. 6 Minuten</span>
             </div>
         </div>
 
-        <!-- Polaroid-Stapel: die Bilder setzt script.js aus der Dog-CEO-API ein -->
         <div class="polaroids" aria-hidden="true">
-            <figure class="polaroid polaroid--left"><div class="photo"><img class="dog-image" alt=""></div></figure>
-            <figure class="polaroid polaroid--right"><div class="photo"><img class="dog-image" alt=""></div></figure>
+            <figure class="polaroid polaroid--left">
+                <div class="photo"><img class="dog-image" alt=""></div>
+                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
+            </figure>
+            <figure class="polaroid polaroid--right">
+                <div class="photo"><img class="dog-image" alt=""></div>
+                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
+            </figure>
             <figure class="polaroid polaroid--center">
                 <div class="photo"><img class="dog-image" alt=""></div>
                 <svg class="icon polaroid-paw"><use href="#paw"/></svg>
