@@ -24,20 +24,20 @@ _FH Graubünden (FHGR)_
 
 ## Projektübersicht
 
-**Spurensuche** ist eine datenjournalistische Website, die ein Paradoxon rund um Hunde und Tierheime in der Schweiz untersucht: Entgegen der weitverbreiteten Annahme eines permanent überlasteten Tierschutzes hat sich die Situation in den Schweizer Tierheimen strukturell entlastet: Während der Gesamthundebestand im Land und die Anzahl der registrierten Tierheime seit 2016 massiv angestiegen sind, ist der totale Bestand an Hunden in Tierheimen kontinuierlich zurückgegangen, was zu einer stark gesunkenen Durchschnittsbelastung pro Institution führt.  
+**Spurensuche** ist eine datenjournalistische Website, die ein Paradoxon rund um Hunde und Tierheime in der Schweiz untersucht: Entgegen der weitverbreiteten Annahme eines permanent überlasteten Tierschutzes hat sich die Situation in den Schweizer Tierheimen strukturell entlastet: Während der Gesamthundebestand im Land und die Anzahl der registrierten Tierheime seit 2018 massiv angestiegen sind, ist der totale Bestand an Hunden in Tierheimen kontinuierlich zurückgegangen, was zu einer stark gesunkenen Durchschnittsbelastung pro Institution führt.  
 Mit einer interaktiven Data Story macht das Projekt die Entwicklung über mehrere Jahre sichtbar und lädt dazu ein, die Zahlen und ihre Zusammenhänge genauer zu erkunden.
 
 ## Die Story
 
 Die Website führt in mehreren Abschnitten durch die Daten und die daraus entstehende Fragestellung:
 
-**Fragestellung:** Wie hat sich das Verhältnis zwischen der allgemeinen Hundepopulation in der Schweiz, der physischen Tierheim-Infrastruktur und dem tatsächlichen Belegungsdruck in den Tierheimen zwischen 2016 und 2025 entwickelt?
+**Fragestellung:** Wie hat sich das Verhältnis zwischen der allgemeinen Hundepopulation in der Schweiz, der physischen Tierheim-Infrastruktur und dem tatsächlichen Belegungsdruck in den Tierheimen zwischen 2018 und 2025 entwickelt?
 
 1. **Prolog – Der Mythos vom überfüllten Zwinger:** Einstieg über die verbreitete Vorstellung überfüllter Tierheime.
 2. **Hunde-Fieber – Die Schweiz im Hunde-Fieber:** Entwicklung der registrierten Hunde in der Schweiz. Seit 2018 ist die Zahl um rund 10 % gestiegen; seit 2023 flacht die Kurve ab.
 3. **Im Tierheim – Die Welle, die nie kam:** Entwicklung der Hunde in Schweizer Tierheimen. Seit dem Höchststand Ende 2017 sinkt die Zahl fast ununterbrochen.
 4. **Das Paradoxon, Teil 1 – Draussen mehr Hunde. Drinnen weniger.:** Gegenüberstellung der Entwicklung seit 2018: rund 10 % mehr Hunde im Land und rund 40 % weniger Hunde im Tierheim.
-5. **Die Karte – Und trotzdem immer mehr Heime:** Entwicklung der registrierten Tierheime: von 11 im Jahr 2016 auf 91 Ende 2025.
+5. **Die Karte – Und trotzdem immer mehr Heime:** Entwicklung der registrierten Tierheime: von 11 im Jahr 2018 auf 91 Ende 2025.
 6. **Paradoxon, Teil 2 – Aus 51 Hunden pro Heim werden 14:** Vergleich der durchschnittlichen Zahl von Hunden pro Tierheim: 51 im Jahr 2018 und 14 im Jahr 2025.
 7. **Fazit:** Zusammenfassung der Ergebnisse und Einordnung der offenen Fragen.
 
