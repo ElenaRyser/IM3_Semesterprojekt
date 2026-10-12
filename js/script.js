@@ -85,6 +85,7 @@ const REVEAL_DURATION = 2000;
 // So müssen wir das nicht bei jeder Grafik einzeln angeben.
 
 Chart.defaults.font.family = 'Roboto, sans-serif';
+Chart.defaults.font.size = 13;                       // = Label-Stufe im CSS (--fs-label)
 Chart.defaults.color = 'rgba(243, 239, 231, 0.75)'; // Achsenbeschriftung: helles Creme
 Chart.defaults.maintainAspectRatio = false;          // Höhe kommt aus dem CSS (.chart-box)
 Chart.defaults.animation = false;                    // eigene Animation: siehe revealFromLeft
@@ -110,7 +111,7 @@ Chart.defaults.plugins.legend.display = false;
 // Welche Werte, steht bei jeder Grafik unter options.plugins.pointLabels.labels:
 //   { index: 9, text: '91', position: 'above' }
 //   datasetIndex: welche Linie (Standard 0), color: Schriftfarbe (Standard Creme)
-//   position: 'above' (über dem Punkt), 'aboveLeft' (über dem Punkt, nach links),
+//   position: 'above' (über dem Punkt), 'aboveLeft' / 'aboveRight' (über dem Punkt, nach links / rechts),
 //             'below', 'belowRight', 'belowLeft' oder 'right' (rechts daneben)
 // Chart.js ruft afterDatasetsDraw jedes Mal auf, nachdem die Linien gezeichnet wurden.
 const pointLabels = {
@@ -144,6 +145,9 @@ const pointLabels = {
             } else if (label.position === 'belowLeft') {
                 ctx.textAlign = 'right';
                 ctx.fillText(label.text, x + 6, y + 22);
+            } else if (label.position === 'aboveRight') {
+                ctx.textAlign = 'left';
+                ctx.fillText(label.text, x - 6, y - 14);
             } else if (label.position === 'aboveLeft') {
                 ctx.textAlign = 'right';
                 ctx.fillText(label.text, x + 6, y - 14);
@@ -368,7 +372,7 @@ function createShelterChart(months) {
             plugins: {
                 pointLabels: {
                     labels: [
-                        { index: peakIndex, text: `Höchststand: ${formatNumber(values[peakIndex])}`, position: 'above' },
+                        { index: peakIndex, text: `Höchststand: ${formatNumber(values[peakIndex])}`, position: 'aboveRight' },
                         { index: lastIndex, text: formatNumber(values[lastIndex]), position: 'right' },
                     ],
                 },
