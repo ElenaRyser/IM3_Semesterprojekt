@@ -635,6 +635,20 @@ p {
     background: var(--bordeaux);
 }
 
+/* Footer: links Quellen, rechts Copyright – nebeneinander.
+   space-between schiebt die beiden Absätze an den linken und rechten Rand. */
+.site-footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.site-footer p {
+    margin: 0;
+    max-width: none; /* Footer-Text darf breiter sein als normale Absätze (34em) */
+}
+
 
 /* --------------------------------------------------------------------------
    10. Mobile
@@ -678,5 +692,12 @@ p {
     .polaroids {
         height: 300px;
         max-width: 340px;
+    }
+
+    /* Footer auf dem Handy: untereinander statt nebeneinander */
+    .site-footer .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 }
