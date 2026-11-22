@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spurensuche</title>
-    <link rel="icon" type="image/svg" href="img/cursor-paw.svg">
+    <link rel="icon" type="image/svg+xml" href="img/cursor-paw.svg">
     <meta name="description"
-          content="Eine datengetriebene Spurensuche 2018–2025: Immer weniger Hunde leben im Tierheim, trotzdem gibt es immer mehr Tierheime.">
+          content="Datenrecherche 2016–2025: Warum in Schweizer Tierheimen weniger Hunde registriert sind und die Heime trotzdem am Limit arbeiten.">
 
     <link rel="stylesheet" href="css/fonts.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=27">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-    <script src="js/script.js" type="module"></script>
+    <script src="js/script.js?v=29" type="module"></script>
 </head>
 <body>
 
@@ -27,328 +27,448 @@
     </symbol>
 </svg>
 
-
-<nav class="nav" aria-label="Kapitel">
-    <span class="nav-pill" aria-hidden="true"></span>
-    <a href="#prolog">Prolog</a>
-    <a href="#hunde-fieber">Hunde-Fieber</a>
-    <a href="#im-tierheim">Im Tierheim</a>
-    <a href="#p1">Paradoxon 1</a>
-    <a href="#karte">Die Karte</a>
-    <a href="#p2">Paradoxon 2</a>
-    <a href="#fazit">Fazit</a>
-</nav>
-
 <header class="site-header">
     <div class="container">
         <a class="logo" href="#top">
             <svg class="icon"><use href="#paw"/></svg>
             Spurensuche
         </a>
+        <nav class="nav" aria-label="Kapitel">
+            <span class="nav-pill" aria-hidden="true"></span>
+            <a href="#prolog">Prolog</a>
+            <a href="#widerspruch">Der Widerspruch</a>
+            <a href="#falsche-spur">Die falsche Spur</a>
+            <a href="#aufloesung">Die Auflösung</a>
+            <a href="#wer-bleibt">Wer bleibt</a>
+            <a href="#fazit">Fazit</a>
+        </nav>
     </div>
 </header>
 
-<section class="section section--light hero" id="top">
-    <div class="container split">
-        <div>
-            <p class="hero-kicker">Eine datengetriebene Spurensuche 2018 – 2025</p>
-            <h1>Das Paradoxon der Schweizer Tierheime</h1>
-            <p class="hero-lead">
-                Immer weniger Hunde leben im Tierheim. Trotzdem gibt es immer
-                mehr Tierheime. Wie passt das zusammen?
-            </p>
-            <div class="hero-actions">
-                <a class="button" href="#prolog">Folge der Spur <img class="button-icon" src="img/arrow_icon_bottom.svg" alt="Arrow pointing down"></a>
-                <span class="small">Lesezeit ca. 6 Minuten</span>
-            </div>
-        </div>
-
-        <div class="polaroids" aria-hidden="true">
-            <figure class="polaroid polaroid--left">
-                <div class="photo"><img class="dog-image" alt=""></div>
-                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
-            </figure>
-            <figure class="polaroid polaroid--right">
-                <div class="photo"><img class="dog-image" alt=""></div>
-                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
-            </figure>
-            <figure class="polaroid polaroid--center">
-                <div class="photo"><img class="dog-image" alt=""></div>
-                <svg class="icon polaroid-paw"><use href="#paw"/></svg>
-            </figure>
-        </div>
-    </div>
-</section>
+<div class="trail" id="trail" aria-hidden="true"></div>
 
 <main>
+    <section class="section section--light hero" id="top">
+        <div class="container">
+            <div class="split">
+                <h1>Weniger Hunde.<br><span class="accent">Volle Heime.</span></h1>
+
+                <div>
+                    <div class="polaroids" id="polaroids" role="button" tabindex="0" aria-label="Hundefotos durchblättern">
+                        <figure class="polaroid polaroid--left">
+                            <div class="photo"><img alt=""></div>
+                            <figcaption><svg class="icon"><use href="#paw"/></svg><span class="breed"></span><small>Symbolbild · Dog CEO API</small></figcaption>
+                        </figure>
+                        <figure class="polaroid polaroid--right">
+                            <div class="photo"><img alt=""></div>
+                            <figcaption><svg class="icon"><use href="#paw"/></svg><span class="breed"></span><small>Symbolbild · Dog CEO API</small></figcaption>
+                        </figure>
+                        <figure class="polaroid polaroid--center">
+                            <div class="photo"><img alt=""></div>
+                            <figcaption><svg class="icon"><use href="#paw"/></svg><span class="breed"></span><small>Symbolbild · Dog CEO API</small></figcaption>
+                        </figure>
+                    </div>
+                    <p class="small polaroid-hint"><svg class="icon"><use href="#paw"/></svg> Links oder rechts tippen zum Blättern</p>
+                </div>
+            </div>
+
+            <div class="hero-numbers">
+                <p>
+                    <span class="chart-number" id="kpi-bestand">1'288</span>
+                    Hunde waren Ende Dezember 2025 in Schweizer Tierheimen registriert.<sup><a href="#q1">1</a></sup>
+                </p>
+                <p>
+                    <span class="chart-number">1'696</span>
+                    Hunde nahmen allein die Heime des Schweizer Tierschutzes 2025 auf.<sup><a href="#q5">5</a></sup>
+                </p>
+            </div>
+
+            <div class="hero-actions">
+                <div>
+                    <p class="hero-lead">
+                        Beide Zahlen stimmen. Folgen Sie der Spur, um herauszufinden,
+                        wie sie zusammenpassen.
+                    </p>
+                    <a class="button" href="#prolog"><svg class="icon"><use href="#paw"/></svg> Folge der Spur</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- ======================================================================
-         PROLOG
-         ====================================================================== -->
+                                            PROLOG
+             ====================================================================== -->
     <section class="section section--bordeaux" id="prolog">
         <div class="container split">
             <div>
                 <p class="kicker">Prolog</p>
-                <h2>Der Mythos vom überfüllten Zwinger</h2>
+                <h2>Das Bild im Kopf</h2>
                 <p>
-                    Wenn wir an den Tierschutz denken, haben wir ein Bild vor Augen:
-                    überfüllte Tierheime, gestresste Mitarbeitende und endlose
-                    Wartelisten für Hunde, die ein neues Zuhause suchen.
+                    Bellende Zwinger, überlastete Pflegerinnen, lange Wartelisten.
+                    So stellen sich die meisten ein Tierheim vor.
                 </p>
                 <p>
-                    In einem boomenden «Hundeland Schweiz» müsste der Druck auf die
-                    Institutionen schliesslich steigen.
+                    Nach der Pandemie bestätigten die Medien dieses Bild. Im Sommer 2022
+                    berichtete SRF von Heimen in Zürich, Basel und Bern, die ungewöhnlich
+                    viele Hunde zurücknehmen mussten. Die Leiterin des Zürcher Tierheims
+                    Strubeli sprach von sogenannten «Corona-Anschaffungstieren».<sup><a href="#q3">3</a></sup>
                 </p>
-            </div>
-
-            <div>
-                <p class="kicker">Das Bild im Kopf</p>
-                <figure class="chart-card chart-card--tan">
-                    <p class="chart-label">Veränderung seit 2018</p>
-                    <div class="chart-box">
-                        <canvas id="chart-prolog" role="img"
-                                aria-label="Liniendiagramm: Seit 2018 steigt die Zahl der Tierheime um 117 Prozent, die Zahl der Hunde im Heim sinkt um 40 Prozent."></canvas>
-                    </div>
-                    <button class="replay" type="button" data-chart="chart-prolog">Nochmals abspielen</button>
-                </figure>
-                <p>
-                    Doch als wir die offiziellen Open-Data-Zahlen der Identitas AG
-                    auswerteten, liess sich diese Theorie nicht bestätigen.
-                </p>
-            </div>
-        </div>
-
-        <div class="container">
-            <p class="statement">
-                Die Realität ist viel komplexer – und erzählt eine ganz andere Geschichte.
-            </p>
-        </div>
-    </section>
-
-    <!-- ======================================================================
-         HUNDE-FIEBER
-         ====================================================================== -->
-    <section class="section section--light" id="hunde-fieber">
-        <div class="container split">
-            <div>
-                <p class="kicker">Hunde-Fieber</p>
-                <h2>Die Schweiz im Hunde-Fieber</h2>
-                <p>
-                    Bevor wir in die Heime blicken, schauen wir nach draussen. Die Zahl
-                    der registrierten Hunde ist seit 2018 um rund 10 Prozent gewachsen,
-                    am stärksten in den Corona-Jahren.
-                </p>
-                <p>
-                    Seit 2023 flacht die Kurve ab. Ein Rückgang ist es noch kaum, aber
-                    der Boom ist vorbei.
-                </p>
-                <figure class="photo-card">
-                    <div class="photo"><img class="dog-image" alt="Zufälliges Hundebild aus der Dog CEO API"></div>
-                </figure>
-            </div>
-
-            <div>
-                <figure class="chart-card chart-card--orange">
-                    <p class="chart-label">Registrierte Hunde in der Schweiz, Stand Dezember</p>
-                    <p class="chart-number">
-                        <span id="kpi-land">552'538</span>
-                        <span class="chart-number-note" id="kpi-land-date">Dezember 2025</span>
-                    </p>
-                    <div class="chart-box">
-                        <canvas id="chart-hunde-land" role="img"
-                                aria-label="Liniendiagramm der registrierten Hunde in der Schweiz von 2016 bis 2025."></canvas>
-                    </div>
-                    <button class="replay" type="button" data-chart="chart-hunde-land">Nochmals abspielen</button>
-                    <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Stand jeweils Dezember.</figcaption>
-                </figure>
                 <p class="statement statement--small">
-                    Der Boom ist echt: plus 10 % seit 2018, am stärksten in den
-                    Corona-Jahren. Seit 2023 flacht er ab.
+                    Mehr Hunde im Land, mehr Notfälle im Heim? Bevor wir die Daten zeigen,
+                    eine Frage an Sie.
                 </p>
             </div>
+
+            <figure class="chart-card chart-card--light">
+                <p class="chart-label">Ihre Schätzung</p>
+                <h3>Wie hat sich die Zahl der Hunde in Schweizer Tierheimen seit 2018 verändert?</h3>
+
+                <div class="guess" aria-hidden="true">
+                    <span class="guess-pin" id="pin-tipp" style="left:50%">Ihr Tipp: ±0 %</span>
+                    <span class="guess-pin guess-pin--real" id="pin-real" style="left:50%">Tatsächlich: −40 %</span>
+                </div>
+                <label class="small" for="guess">Ziehen Sie den Regler auf Ihren Tipp.</label>
+                <input type="range" id="guess" min="-60" max="60" step="5" value="0">
+                <p class="guess-scale small"><span>−60 %</span><span>±0</span><span>+60 %</span></p>
+
+                <div class="guess-actions">
+                    <button class="button" id="guess-button" type="button">Auflösen</button>
+                    <button class="replay" id="guess-replay" type="button" hidden><svg class="icon" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Nochmals schätzen</button>
+                </div>
+                <p id="guess-result" aria-live="polite"></p>
+            </figure>
         </div>
     </section>
 
     <!-- ======================================================================
-         IM TIERHEIM
+                                   DER WIDERSPRUCH
          ====================================================================== -->
-    <section class="section section--light" id="im-tierheim">
-        <div class="container split">
+    <section class="section section--light" id="widerspruch">
+        <div class="container split split--flip">
             <div>
-                <p class="kicker">Im Tierheim</p>
-                <h2>Die Welle, die nie kam</h2>
+                <p class="kicker">Kapitel 1</p>
+                <h2>Draussen mehr Hunde, drinnen weniger</h2>
                 <p>
-                    Mehr Hunde im Land müssten auch mehr Notfälle bedeuten. Nach der
-                    Pandemie wurde mit vollen Heimen gerechnet.
+                    Seit 2018 ist die Zahl der registrierten Hunde in der Schweiz um rund
+                    10 Prozent gewachsen. Ende 2025 waren es 552'538.<sup><a href="#q1">1</a></sup>
                 </p>
                 <p>
-                    Passiert ist das Gegenteil: Seit dem Höchststand Ende 2017 sinkt die
-                    Zahl der Heimhunde fast ununterbrochen.
+                    Am stärksten wuchs sie in den Corona-Jahren. Gesucht waren vor allem
+                    Welpen, und viele kamen aus dem Ausland: 2020 wurden rund 30'700 Hunde
+                    in die Schweiz importiert.<sup><a href="#q8">8</a></sup> Seit 2023 flacht die Kurve ab.
                 </p>
-                <aside class="info-card">
-                    <p class="info-card-label">Die zentrale Frage</p>
-                    <p class="info-card-text">
-                        Warum sinkt die Zahl der Heimhunde, obwohl im Land mehr Hunde leben?
-                    </p>
-                </aside>
+                <p>
+                    In den Heimen geht es in die andere Richtung. Seit dem Höchststand Ende
+                    2017 sinkt die Zahl der Heimhunde fast ununterbrochen, bis 2025 um rund
+                    40 Prozent.
+                </p>
+                <p class="question">Wo ist die Welle geblieben?</p>
             </div>
 
             <figure class="chart-card chart-card--brown">
-                <p class="chart-label">Hunde in Schweizer Tierheimen</p>
-                <p class="chart-number">
-                    <span id="kpi-heim">1'288</span>
-                    <span class="chart-number-note" id="kpi-heim-date">Dezember 2025</span>
-                </p>
-                <div class="chart-box">
-                    <canvas id="chart-tierheim" role="img"
-                            aria-label="Flächendiagramm der Hunde in Schweizer Tierheimen pro Monat von 2016 bis 2025, mit Höchststand Ende 2017."></canvas>
-                </div>
-                <button class="replay" type="button" data-chart="chart-tierheim">Nochmals abspielen</button>
-                <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Monatswerte.</figcaption>
-            </figure>
-        </div>
-    </section>
-
-    <!-- ======================================================================
-         PARADOXON TEIL 1
-         ====================================================================== -->
-    <section class="section section--brown section--center" id="p1">
-        <div class="container container--narrow">
-            <p class="kicker kicker--accent">Das Paradoxon Teil 1</p>
-            <h2>Draussen mehr Hunde. Drinnen weniger.</h2>
-
-            <figure class="chart-card chart-card--plain">
                 <p class="chart-label">Veränderung seit 2018, Stand jeweils Dezember</p>
-                <div class="kpi-pills">
-                    <p class="kpi-pill kpi-pill--orange">
-                        <span class="kpi-pill-value" id="kpi-p1-land">+10 %</span>
-                        Hunde im Land
-                    </p>
-                    <p class="kpi-pill kpi-pill--cream">
-                        <span class="kpi-pill-value" id="kpi-p1-heim">−40 %</span>
-                        Hunde im Heim
-                    </p>
+                <div class="toggles" role="group" aria-label="Linie hervorheben">
+                    <button class="toggle" type="button" data-line="beide" aria-pressed="true">Beide</button>
+                    <button class="toggle" type="button" data-line="land" aria-pressed="false">Draussen</button>
+                    <button class="toggle" type="button" data-line="heim" aria-pressed="false">Drinnen</button>
                 </div>
                 <div class="chart-box">
-                    <canvas id="chart-p1" role="img"
+                    <canvas id="chart-widerspruch" role="img"
                             aria-label="Liniendiagramm: Hunde im Land plus 10 Prozent, Hunde im Heim minus 40 Prozent seit 2018."></canvas>
                 </div>
-                <button class="replay" type="button" data-chart="chart-p1">Nochmals abspielen</button>
+                <button class="replay" type="button" data-chart="chart-widerspruch"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Nochmals abspielen</button>
+                <figcaption class="chart-source">
+                    Quelle: <a href="https://tierstatistik.identitas.ch/de/dogs-AnimalCentres.html">Identitas, Hunde in Tierheimen</a>
+                    und <a href="https://tierstatistik.identitas.ch/de/">Hunde Schweiz</a>, Stand Dezember.
+                </figcaption>
             </figure>
-
-            <p class="statement statement--small">
-                So liesse sich das erklären. Doch dann schaut man auf die Heime.
-            </p>
         </div>
     </section>
 
     <!-- ======================================================================
-         DIE KARTE
+                                         DIE FALSCHE SPUR
          ====================================================================== -->
-    <section class="section section--light" id="karte">
+    <section class="section section--brown" id="falsche-spur">
         <div class="container split">
             <div>
-                <p class="kicker">Die Karte</p>
-                <h2>Und trotzdem immer mehr Heime</h2>
-                <p>Wer weniger Hunde betreut, bräuchte weniger Plätze, dachten wir.</p>
+                <p class="kicker kicker--accent">Kapitel 2</p>
+                <h2>Die falsche Spur</h2>
                 <p>
-                    Die Statistik zeigt das Gegenteil: 2016 waren 11 Tierheime mit Hunden
-                    registriert, Ende 2025 sind es 91.
+                    Unsere erste Erklärung schien glasklar: Die Zahl der registrierten
+                    Tierheime ist explodiert, von 11 auf 91. Mehr Heime, also weniger Hunde
+                    pro Heim, also Entlastung.
                 </p>
-                <div class="compare-card">
-                    <span class="compare-year">2016</span>
-                    <span class="compare-year">2025</span>
-                    <span class="compare-value" id="kpi-heime-start">11</span>
-                    <span class="compare-arrow" aria-hidden="true">→</span>
-                    <span class="compare-value" id="kpi-heime-end">91</span>
-                </div>
+                <p>
+                    Dann fiel uns das Startjahr auf. Die Statistik beginnt 2016, weil am
+                    1. Januar 2016 die neue Hundedatenbank AMICUS die alte Datenbank ANIS
+                    ablöste.<sup><a href="#q9">9</a></sup> Ein Heim taucht erst auf, wenn es dort erfasst ist.
+                </p>
+                <p>
+                    Der steile Anstieg zeigt deshalb wohl vor allem, wie sich die Heime nach
+                    und nach registrierten. Auch «51 Hunde pro Heim 2018, 14 im Jahr 2025»
+                    ist darum kein sicherer Beleg für Entlastung.
+                </p>
+                <p class="statement statement--small">
+                    Wählen Sie ein Startjahr und sehen Sie, wie sich die Geschichte verändert.
+                </p>
             </div>
 
             <figure class="chart-card chart-card--bordeaux">
-                <p class="chart-label">Registrierte Tierheime, Stand Dezember</p>
+                <p class="chart-label">Registrierte Tierheime mit Hunden, Stand Dezember</p>
+                <div class="toggles" role="group" aria-label="Startjahr wählen">
+                    <button class="toggle" type="button" data-start="2016" aria-pressed="true">Ab 2016</button>
+                    <button class="toggle" type="button" data-start="2018" aria-pressed="false">Ab 2018</button>
+                </div>
                 <p class="chart-number">
-                    <span id="kpi-heime">91</span>
-                    <span class="chart-number-note" id="kpi-heime-date">2025</span>
+                    <span id="heime-prozent">+727 %</span>
+                    <span class="chart-number-note" id="heime-text">von 11 auf 91 Heime</span>
                 </p>
                 <div class="chart-box">
                     <canvas id="chart-heime" role="img"
-                            aria-label="Liniendiagramm der registrierten Tierheime von 11 im Jahr 2016 auf 91 im Jahr 2025."></canvas>
+                            aria-label="Balkendiagramm der registrierten Tierheime von 11 im Jahr 2016 auf 91 im Jahr 2025."></canvas>
                 </div>
-                <button class="replay" type="button" data-chart="chart-heime">Nochmals abspielen</button>
-                <figcaption class="chart-source">Quelle: Identitas AG, Tierstatistik (Open Data). Stand jeweils Dezember.</figcaption>
+                <p class="tags"><span>Basisjahr-Effekt</span><span>Datenlücke</span><span>Nenner-Problem</span></p>
+                <button class="replay" type="button" data-chart="chart-heime"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Nochmals abspielen</button>
+                <figcaption class="chart-source">
+                    Quelle: <a href="https://tierstatistik.identitas.ch/de/dogs-Centres.html">Identitas, Tierheime mit Hunden</a>, Stand Dezember.
+                </figcaption>
             </figure>
         </div>
     </section>
 
     <!-- ======================================================================
-         PARADOXON TEIL 2
+                                 DIE AUFLÖSUNG
          ====================================================================== -->
-    <section class="section section--bordeaux" id="p2">
-        <div class="container split">
+    <section class="section section--light" id="aufloesung">
+        <div class="container split split--flip">
             <div>
-                <p class="kicker">Paradoxon Teil 2</p>
-                <h2>Aus 51 Hunden pro Heim werden 14</h2>
+                <p class="kicker">Kapitel 3</p>
+                <h2>Zwei Arten zu zählen</h2>
                 <p>
-                    Teilt man die Heimhunde durch die Zahl der Heime, wird der Wandel
-                    sichtbar. 2018 kamen auf ein Tierheim im Schnitt 51 Hunde. 2025 sind
-                    es noch 14.
+                    Identitas zählt, wie viele Hunde an einem Stichtag im Heim registriert
+                    sind. Der Schweizer Tierschutz STS zählt, wie viele im Lauf eines Jahres
+                    ankommen.
                 </p>
+                <p>
+                    2024 nahmen die 66 STS-Sektionen 1826 Hunde auf, kaum weniger als im
+                    Vorjahr.<sup><a href="#q4">4</a></sup> Die Mischung hat sich aber verschoben:
+                    1009 Hunde wurden freiwillig abgegeben, 2023 waren es 865. Das sind
+                    17 Prozent mehr.
+                </p>
+                <p>
+                    Ein entlaufener Hund geht oft schnell zurück nach Hause. Ein abgegebener
+                    Hund braucht ein neues Zuhause, und das dauert.
+                </p>
+                <p class="question">Wie können mehr Hunde ins Heim kommen, als je gleichzeitig darin sind?</p>
             </div>
 
-            <figure class="chart-card chart-card--brown">
-                <p class="chart-label">Hunde pro Tierheim, Durchschnitt</p>
-                <div class="chart-number-pair">
-                    <p><span class="chart-number-year">2018</span><span class="chart-number" id="kpi-pro-heim-start">51</span></p>
-                    <p><span class="chart-number-year">2025</span><span class="chart-number" id="kpi-pro-heim-end">14</span></p>
-                </div>
+            <figure class="chart-card chart-card--orange">
+                <p class="chart-label">Aufgenommene Hunde in STS-Heimen pro Jahr</p>
                 <div class="chart-box">
-                    <canvas id="chart-pro-heim" role="img"
-                            aria-label="Balkendiagramm: Hunde pro Tierheim sinken von 51 im Jahr 2018 auf 14 im Jahr 2025."></canvas>
+                    <canvas id="chart-sts" role="img"
+                            aria-label="Balkendiagramm: 2023 rund 1838 Hunde aufgenommen, davon 865 abgegeben. 2024 1826, davon 1009 abgegeben. 2025 1696. Zum Vergleich: 1288 Hunde in allen Heimen am Stichtag Dezember 2025."></canvas>
                 </div>
-                <button class="replay" type="button" data-chart="chart-pro-heim">Nochmals abspielen</button>
+                <button class="replay" type="button" data-chart="chart-sts"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>Nochmals abspielen</button>
+                <figcaption class="chart-source">
+                    Quellen: <a href="https://tierschutz.com/app/uploads/2025/10/2025-10-08-MM-Tierschutzstatistik-2024-D.pdf">STS-Tierschutzstatistik 2024</a>,
+                    <a href="https://www.plattformj.ch/artikel/246568/">Plattform J</a> (2025),
+                    <a href="https://tierstatistik.identitas.ch/de/dogs-AnimalCentres.html">Identitas</a> (Bestand).
+                </figcaption>
             </figure>
         </div>
     </section>
 
     <!-- ======================================================================
-         FAZIT
+                                     SIMULATION
+         ====================================================================== -->
+    <section class="section section--bordeaux" id="simulation">
+        <div class="container">
+            <h2>Ein Foto zeigt nicht den ganzen Film</h2>
+        </div>
+
+        <div class="container split scrolly">
+
+            <div class="sim">
+                <canvas id="sim" aria-label="Animation: Hunde kommen ins Heim, die meisten gehen schnell wieder, einige bleiben lange."></canvas>
+                <div class="kpi-pills">
+                    <p class="kpi-pill kpi-pill--bestand" id="pill-bestand">
+                        <span class="kpi-pill-value" id="count-bestand">0</span>
+                        Bestand: gerade im Heim
+                    </p>
+                    <p class="kpi-pill kpi-pill--aufnahmen" id="pill-aufnahmen">
+                        <span class="kpi-pill-value" id="count-aufnahmen">0</span>
+                        Aufnahmen: seit Start
+                    </p>
+                </div>
+                <label class="small" for="hard">Anteil Hunde, die lange bleiben: <b id="hard-value">0 %</b></label>
+                <input type="range" id="hard" min="0" max="50" step="5" value="0">
+                <p class="small">Helle Hunde gehen schnell, dunkle bleiben lange. Vereinfachte Illustration ohne echte Daten.</p>
+            </div>
+
+            <div class="steps">
+                <div class="step" data-hard="0" data-mark="">
+                    <p class="info-card">Stellen Sie sich ein kleines Tierheim vor. Hunde kommen links an und gehen rechts in ein neues Zuhause.</p>
+                </div>
+                <div class="step" data-hard="5" data-mark="aufnahmen">
+                    <p class="info-card">Der Tierschutz zählt jeden Hund, der ankommt, das ganze Jahr lang. Wie ein <b>Film</b>: Er zeigt alle, die kommen und gehen. Das sind die <b>Aufnahmen</b>.</p>
+                </div>
+                <div class="step" data-hard="5" data-mark="bestand" data-foto="ja">
+                    <p class="info-card">Identitas schaut nur einmal hin, Ende Dezember. Wie ein <b>Foto</b>: Es zeigt nur, wer gerade da ist. Das ist der <b>Bestand</b>. Darum sind die Aufnahmen viel grösser als der Bestand.</p>
+                </div>
+                <div class="step" data-hard="35" data-mark="bestand">
+                    <p class="info-card">Jetzt bleiben mehr Hunde lange: alte, kranke oder schwierige. Das Heim füllt sich, obwohl kaum mehr Hunde ankommen.</p>
+                </div>
+                <div class="step" data-hard="35" data-mark="beide">
+                    <p class="info-card">Ein kleinerer Bestand heisst also nicht weniger Arbeit. Entscheidend ist, wie lange ein Hund bleibt. Genau diese Zahl fehlt in beiden Statistiken. Probieren Sie den Regler selbst aus.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================================
+                             WER BLEIBT
+         ====================================================================== -->
+    <section class="section section--light" id="wer-bleibt">
+        <div class="container container--narrow">
+            <p class="kicker">Kapitel 4</p>
+            <h2>Wer schnell geht und wer bleibt</h2>
+
+            <div class="cards">
+                <aside class="info-card">
+                    <p class="info-card-label">Schnell weg</p>
+                    <p>
+                        Kleine Hunde und beliebte Rassen wie Chihuahuas, Lagottos oder Spitze
+                        «haben es deutlich leichter», sagt Rommy Los, Geschäftsleiter des
+                        Zürcher Tierschutzes.<sup><a href="#q2">2</a></sup>
+                    </p>
+                    <p>
+                        2024 vermittelten die STS-Heime 872 Hunde. Fast die Hälfte ging an die
+                        ursprünglichen Besitzer zurück.<sup><a href="#q2">2</a></sup>
+                    </p>
+                </aside>
+                <aside class="info-card">
+                    <p class="info-card-label">Bleibt lange</p>
+                    <p>
+                        Alte, kranke und schwierige Hunde finden schwer ein neues Zuhause.
+                        Manche warten über zwei Jahre im Heim.<sup><a href="#q2">2</a></sup>
+                    </p>
+                    <p>Sie belegen einen Platz, während viele andere schon wieder weg sind.</p>
+                </aside>
+            </div>
+
+            <h3>Warum nehmen nicht mehr Menschen einen Heimhund? Drei Hürden:</h3>
+            <details>
+                <summary><svg class="icon"><use href="#paw"/></svg>Die Heime wählen streng aus</summary>
+                <p>Es gibt keinen Anspruch darauf, ein Tier zu übernehmen. Heime prüfen Wohnsituation, Finanzen und ob das Tier zum Haushalt passt.<sup><a href="#q6">6</a></sup></p>
+            </details>
+            <details>
+                <summary><svg class="icon"><use href="#paw"/></svg>Im Heim warten selten Welpen</summary>
+                <p>Die meisten Hunde in Tierheimen sind Mischlinge.<sup><a href="#q6">6</a></sup> Wer einen Welpen einer bestimmten Rasse will, kauft beim Züchter oder im Ausland.<sup><a href="#q8">8</a></sup></p>
+            </details>
+            <details>
+                <summary><svg class="icon"><use href="#paw"/></svg>Ältere Menschen gehen oft leer aus</summary>
+                <p>Laut 20 Minuten verweigern Tierheime Seniorinnen und Senioren häufig einen jungen Hund.<sup><a href="#q7">7</a></sup></p>
+            </details>
+
+            <h3>Und 2025? Weniger Aufnahmen, keine Entlastung</h3>
+            <p>
+                2025 nahmen die STS-Heime 1696 Hunde auf, weniger als im Vorjahr. Entspannt
+                hat sich die Lage dadurch nicht.<sup><a href="#q5">5</a></sup> Viele Heime sind
+                weiterhin voll oder fast voll, weil die Tiere schwerer zu vermitteln sind und
+                länger bleiben.<sup><a href="#q5">5</a></sup>
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+                                          FAZIT
          ====================================================================== -->
     <section class="section section--brown" id="fazit">
-        <div class="container split">
-            <div>
-                <p class="kicker">Fazit</p>
-                <p class="statement statement--small">Das Bild vom überfüllten Zwinger stimmt nicht mehr.</p>
-                <p class="statement statement--small">
-                    Warum es gleichzeitig mehr Heime gibt, beantworten die Zahlen allein nicht.
-                </p>
+        <div class="container">
+            <p class="kicker">Fazit</p>
+            <h2>Der Zwinger ist leerer, aber nicht leichter.</h2>
+            <p>
+                Der Bestand zeigt weniger Hunde in den Heimen. Die Aufnahmen zeigen, dass
+                weiterhin viele ankommen und mehr Hunde abgegeben werden. Wer bleibt, bleibt
+                länger. Unsere erste These einer «Entlastung» hält dem Datencheck nicht stand.
+            </p>
+            <p class="statement statement--small" id="guess-echo" hidden></p>
 
+            <div class="cards cards--3">
                 <div class="list-card">
                     <h3>Was die Daten zeigen</h3>
                     <ul>
                         <li>Hunde im Land: rund +10 % seit 2018</li>
-                        <li>Hunde im Heim: rund −40 % seit 2018</li>
-                        <li>Tierheime: von 11 auf 91 seit 2016</li>
-                        <li>Hunde pro Heim: von 51 auf 14</li>
+                        <li>Hunde im Heim am Stichtag: rund −40 % seit 2018</li>
+                        <li>Abgegebene Hunde in STS-Heimen: 865 (2023) → 1009 (2024)</li>
+                        <li>Aufnahmen STS-Heime: 1826 (2024), 1696 (2025)</li>
                     </ul>
                 </div>
-
                 <div class="list-card">
                     <h3>Was sie nicht zeigen</h3>
                     <ul>
-                        <li>Ob neue Heime entstanden sind oder bestehende erst nach und nach registriert wurden</li>
-                        <li>Wie viele Hunde vermittelt werden: die Statistik zählt Bestände, keine Adoptionen</li>
+                        <li>Wie lange ein Hund im Heim bleibt</li>
+                        <li>Wie viele Heime neu sind und wie viele erst seit AMICUS registriert</li>
                         <li>Wie viele Plätze ein Heim hat</li>
+                        <li>Wie gut sich Identitas und STS vergleichen lassen: Der STS erfasst nur seine 66 Sektionen</li>
+                    </ul>
+                </div>
+                <div class="list-card">
+                    <h3>Die nächste Spur</h3>
+                    <ul>
+                        <li>STS-Daten 2020–2025 nach Aufnahmegrund auswerten</li>
+                        <li>Aufenthaltsdauer bei einzelnen Heimen anfragen</li>
+                        <li>Identitas fragen, ab wann Heime vollständig erfasst sind</li>
                     </ul>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="polaroids" aria-hidden="true">
-                <figure class="polaroid polaroid--left"><div class="photo"><img class="dog-image" alt=""></div></figure>
-                <figure class="polaroid polaroid--right"><div class="photo"><img class="dog-image" alt=""></div></figure>
-                <figure class="polaroid polaroid--center">
-                    <div class="photo"><img class="dog-image" alt=""></div>
-                    <svg class="icon polaroid-paw"><use href="#paw"/></svg>
-                </figure>
+
+    <!-- ======================================================================
+                                          DATEN & METHODE
+         ====================================================================== -->
+    <section class="section section--light" id="daten-und-methode">
+        <div class="container">
+            <p class="kicker">Transparenz</p>
+            <h2>Daten &amp; Methode</h2>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h3><svg class="icon"><use href="#paw"/></svg>Datensätze</h3>
+                    <ul>
+                        <li><a href="https://tierstatistik.identitas.ch/de/dogs-AnimalCentres.html">Identitas: Hunde in Tierheimen</a></li>
+                        <li><a href="https://tierstatistik.identitas.ch/de/dogs-Centres.html">Identitas: Tierheime mit Hunden</a></li>
+                        <li><a href="https://tierstatistik.identitas.ch/de/">Identitas: Hunde Schweiz</a></li>
+                        <li>Schweizer Tierschutz STS: Aufnahmen 2020–2025, auf Anfrage erhalten</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h3><svg class="icon"><use href="#paw"/></svg>So haben wir gerechnet</h3>
+                    <ul>
+                        <li>Pro Jahr der Dezember-Wert</li>
+                        <li>Veränderung: (Wert − Wert 2018) ÷ Wert 2018</li>
+                        <li>Hunde pro Heim: 2'156 ÷ 42 = 51 (2018), 1'288 ÷ 91 = 14 (2025)</li>
+                        <li>STS 2023: 1'826 + 12 = 1'838</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h3><svg class="icon"><use href="#paw"/></svg>Grenzen</h3>
+                    <ul>
+                        <li>AMICUS gibt es erst seit 1.1.2016.</li>
+                        <li>Der STS erfasst nur seine 66 Sektionen.</li>
+                        <li>Keine Daten zur Aufenthaltsdauer und zu den Plätzen.</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h3><svg class="icon"><use href="#paw"/></svg>Bildnachweis</h3>
+                    <ul>
+                        <li>Fotos: Symbolbilder via <a href="https://dog.ceo/dog-api/">Dog CEO API</a> (Stanford Dogs Dataset)</li>
+                        <li>Die Rasse steht in der Bild-URL.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -357,16 +477,31 @@
 
 <footer class="site-footer">
     <div class="container">
+        <h3>Quellen</h3>
+        <ol class="sources">
+            <li id="q1"><a href="https://tierstatistik.identitas.ch/de/">Identitas AG, Tierstatistik (Open Data)</a>, Stand Dezember 2025</li>
+            <li id="q2"><a href="https://www.blick.ch/gesellschaft/warten-im-tierheim-diese-hunde-und-katzen-finden-keinen-platz/1pnrjjv">Blick: Wer alt, krank oder schwierig ist, bleibt im Tierheim sitzen, 21.01.2026</a></li>
+            <li id="q3"><a href="https://www.srf.ch/news/schweiz/volle-tierheime-viele-corona-haustiere-landen-jetzt-im-tierheim">SRF: Viele Corona-Haustiere landen jetzt im Tierheim, 19.07.2022</a></li>
+            <li id="q4"><a href="https://tierschutz.com/app/uploads/2025/10/2025-10-08-MM-Tierschutzstatistik-2024-D.pdf">Schweizer Tierschutz STS: Tierschutzstatistik 2024, 22.10.2025</a></li>
+            <li id="q5"><a href="https://www.plattformj.ch/artikel/246568/">Plattform J: Keine Entlastung für Schweizer Tierheime, 10.09.2026</a></li>
+            <li id="q6"><a href="https://www.srf.ch/sendungen/kassensturz-espresso/espresso/neues-haustier-ich-moechte-einen-hund-aus-dem-tierheim-was-gilt">SRF Espresso: Ich möchte einen Hund aus dem Tierheim – was gilt?, 12.06.2025</a></li>
+            <li id="q7"><a href="https://www.20min.ch/story/huendchen-risiko-tierheim-senioren-615847721572">20 Minuten: Tierheime verweigern Senioren Hündchen-Kauf, 29.12.2023</a></li>
+            <li id="q8"><a href="https://www.tierimrecht.org/documents/4126/Medienmitteilung.pdf">VIER PFOTEN und Tier im Recht: Medienmitteilung Welpenhandel, 29.10.2021</a></li>
+            <li id="q9">Identitas AG: Informationsblatt AMICUS (Start am 1.1.2016)</li>
+        </ol>
         <p class="small">
-            IM3 Semesterprojekt · Daten: Identitas AG, Tierstatistik (Open Data) ·
+            IM3 Semesterprojekt · Daten: Identitas AG, Schweizer Tierschutz STS ·
             Bilder: Dog CEO API
         </p>
-        <!-- &copy; ist das Zeichen © -->
-        <p class="small">
+        <p class="small copyright">
             &copy; 2026 Lea Kamber, Elena Ryser, Cenia Revel, Cátia Mataguerreiro
         </p>
     </div>
 </footer>
+
+<a class="to-top" id="to-top" href="#" aria-label="Zurück zum Start">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l-7 7 1.4 1.4L11 7.8V20h2V7.8l4.6 4.6L19 11z"/></svg>
+</a>
 
 </body>
 </html>
